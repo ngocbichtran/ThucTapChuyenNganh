@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout/home')
 @section('body')
 
   <!-- [ Main Content ] start -->
