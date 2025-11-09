@@ -34,17 +34,14 @@ Route::get('admin/storage/lichsukho', function () {
 })->name ('storage-lichsukho');
 
 //Route của management
-Route::get('admin/management/user', function () {
-    return view('admin/management/user-list');
-})->name ('management-user');
+Route::get('admin/manegement/user', function () {
+    return view('admin/manegement/user-list');
+})->name ('manegement-user');
 
-Route::get('admin/management/role', function () {
-    return view('admin/management/role-list');
-})->name ('management-role');
+Route::get('admin/manegement/role', function () {
+    return view('admin/manegement/role-list');
+})->name ('manegement-role');
 
-Route::get('admin/management/menu', function () {
-    return view('admin/management/menu-list');
-})->name ('management-menu');
 
 //Route shop (trang shop)
 Route::get('/shop', function () {
