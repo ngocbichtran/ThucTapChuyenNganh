@@ -53,7 +53,7 @@
 
 
     <!-- Thanh menu dọc -->
-    <div class="navbar-content">
+    <div class="navbar-content" style="margin-top:30px;">
       <ul class="pc-navbar">
         <!-- //Sản phẩm start -->
         <li class="pc-item pc-hasmenu">
@@ -78,7 +78,7 @@
           </ul>
         </li>
         <!-- //Kho end -->
-         <!-- //Quản lý start -->
+        <!-- //Quản lý start -->
         <li class="pc-item pc-hasmenu">
           <a class="pc-link"><span class="pc-micon"><i class="ti ti-puzzle"></i></span><span class="pc-mtext">Quản lý
               </span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
@@ -89,6 +89,31 @@
           </ul>
         </li>
         <!-- //Quản lý end -->
+        <!-- Chuyển đến trang shop -->
+        <li style="list-style: none; margin-left: 50px; margin-top: 50px;">
+          <a href='/shop' class='pc-link' 
+            style='
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: linear-gradient(90deg, #ffd6e8, #ffe7f3);
+                padding: 10px 18px;
+                border-radius: 25px;
+                color: #ff4fa3;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 6px rgba(255, 192, 203, 0.4);
+            '
+            onmouseover="this.style.background='linear-gradient(90deg, #ffb3d9, #ffd6e8)'; this.style.transform='scale(1.05)'; this.style.color='white';"
+            onmouseout="this.style.background='linear-gradient(90deg, #ffd6e8, #ffe7f3)'; this.style.transform='scale(1)'; this.style.color='#ff4fa3';">
+            <span class='pc-micon' style='font-size:18px;'>
+              <i class='ti ti-heart'></i>
+            </span>
+            <span class='pc-mtext'>CapyShop</span>
+          </a>
+        </li>
+
       </ul>
     </div>
   </div>
