@@ -58,3 +58,7 @@ Route::get('/shop/category', function () {
 Route::get('/shop/product', function () {
     return view('shop/product/shop-product');
 })->name ('shop-product');
+
+Route::get('/shop/product/cart', function () {
+    return view('shop/product/shop-cart');
+})->name ('shop-cart');

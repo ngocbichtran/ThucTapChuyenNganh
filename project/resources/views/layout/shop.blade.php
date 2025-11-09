@@ -98,11 +98,11 @@
 					<!-- Icon header -->
 					<div class="wrap-icon-header flex-w flex-r-m">
 						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11"
-							style="display: flex; align-items: center; background: #fff0fa; border-radius: 25px; padding: 5px 10px; box-shadow: 0 2px 6px rgba(255, 182, 193, 0.3); transition: 0.3s; width: 230px;">
+							style="display: flex; align-items: center; padding: 10px 10px; transition: 0.3s; width: 325px; border-bottom: 1px solid #ccc;">
 							
 							<!-- Icon tìm kiếm -->
 							<i class="zmdi zmdi-search"
-							style="font-size: 18px; color: #ff69b4; margin-right: 8px;"></i>
+							style="font-size: 18px; color: #2b101eff; margin-right: 8px;"></i>
 
 							<!-- Ô nhập liệu -->
 							<input class="mtext-107 cl2 size-114 plh2 p-r-15"
@@ -114,13 +114,13 @@
 
 
 
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="2">
+						<a href="{{route('shop-cart')}}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="2">
 							<i class="zmdi zmdi-shopping-cart"></i>
-						</div>
-
-						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
-							<i class="zmdi zmdi-favorite-outline"></i>
 						</a>
+
+						<!-- <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
+							<i class="zmdi zmdi-favorite-outline"></i>
+						</a> -->
 					</div>
 				</nav>
 			</div>	
@@ -281,8 +281,8 @@
 	</div>
 @yield('body')
 <footer style="
-  background: linear-gradient(180deg, #ffe7f3, #ffd6e8);
-  color: #5a4a4a;
+  background: linear-gradient(180deg, #220f19ff, #190910ff);
+  color: #927b7bff;
   padding-top: 60px;
   padding-bottom: 30px;
   font-family: 'Poppins', sans-serif;
@@ -350,8 +350,8 @@
             border-radius:20px;
             cursor:pointer;
             transition:0.3s;
-          " onmouseover="this.style.background='#ff69b4';" onmouseout="this.style.background='#ffb6c1';">
-            💌 Đăng ký
+          " onmouseover="this.style.background='#331323ff';" onmouseout="this.style.background='#32161bff';">
+          Đăng ký
           </button>
         </form>
       </div>
