@@ -1,13 +1,13 @@
 @extends('layout/home')
 @section('body')
- <div style="margin-bottom: 15px; margin-left: 5%; width: 100%; display: flex; justify-content: flex-start;">
+ <div style="margin-bottom: 15px; margin-left: 5%; display: flex; justify-content: flex-start;">
         <button type="button" class="btn btn-default btn-app btn-xs" style="min-width: 60px;
         margin-top:80px;background-color:green;margin-left:220px;">
             <i class="fa fa-plus"></i><br>
             Add
         </button>
     </div>
-    <div class="container" style="margin-right:0px; margin-left:475px;  padding-top: 0px;padding-bottom: 0px;">
+    <div class="container" style="margin:0px; padding-right:0px; padding-left:350px;  padding-top: 0px; padding-bottom: 0px;">
         <form class="form-inline" style="max-width: 400px; margin-left:200px;margin-right:0px;">
             <div class="form-group mb-3 d-flex align-items-center">
                 <label for="id" style="width: 80px;">ID</label>

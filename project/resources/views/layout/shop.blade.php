@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Home</title>
+	<title>CapyShop</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="{{ asset('assetShop/') }}">
@@ -73,10 +73,10 @@
 			<div class="wrap-menu-desktop">
 			<nav class="limiter-menu-desktop container">
 					<!-- Logo desktop -->		
-					<a href="#" class="logo">
+					<div class="logo">
 						<img src="{{ asset('assetShop/images/icons/CabyShopTrang.png') }}" alt="IMG-LOGO">
 						<h3 style="margin-left:10px;">CapyShop</h3>
-					</a>
+					</div>
 					
 					<!-- Menu desktop -->
 					<div class="menu-desktop">

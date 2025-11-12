@@ -19,7 +19,7 @@
 								<tr class="table_row">
 									<td class="column-1">
 										<div class="how-itemcart1">
-											<img src="images/item-cart-04.jpg" alt="IMG">
+											<img src="{{asset('assetProduct/images/phone.png')}}" alt="IMG">
 										</div>
 									</td>
 									<td class="column-2">Fresh Strawberries</td>
@@ -43,7 +43,7 @@
 								<tr class="table_row">
 									<td class="column-1">
 										<div class="how-itemcart1">
-											<img src="images/item-cart-05.jpg" alt="IMG">
+											<img src="{{asset('assetProduct/images/phone.png')}}" alt="IMG">
 										</div>
 									</td>
 									<td class="column-2">Lightweight Jacket</td>
