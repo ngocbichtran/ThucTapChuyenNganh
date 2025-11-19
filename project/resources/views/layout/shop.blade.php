@@ -47,8 +47,6 @@
     <link rel="stylesheet" href="{{ asset('assetCategory/css/style.css') }}" type="text/css">
 
 	<!--===============================================================================================-->
-
-
 </head>
 <body class="animsition">
 	<!-- Header -->

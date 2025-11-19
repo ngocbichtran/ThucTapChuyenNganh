@@ -59,3 +59,6 @@ Route::get('/shop/product', function () {
 Route::get('/shop/product/cart', function () {
     return view('shop/product/shop-cart');
 })->name ('shop-cart');
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
