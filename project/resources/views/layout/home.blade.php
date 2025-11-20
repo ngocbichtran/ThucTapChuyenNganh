@@ -11,7 +11,6 @@
   <meta name="description" content="Mantis is made using Bootstrap 5 design framework. Download the free admin template & use it for your project.">
   <meta name="keywords" content="Mantis, Dashboard UI Kit, Bootstrap 5, Admin Template, Admin Dashboard, CRM, CMS, Bootstrap Admin Template">
   <meta name="author" content="CodedThemes">
-  <base href="{{ asset('') }}">
 
   <!-- [Favicon] icon -->
 <link rel="icon" href="{{ asset('assetShop/images/icons/CabyShopTrang.png') }}" type="image/x-icon"> <!-- [Google Font] Family -->
@@ -179,14 +178,15 @@
         data-bs-auto-close="outside"
         aria-expanded="false"
       >
-        <img src="../assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar">
+       <img src="{{ asset('assets/images/user/avatar-2.jpg') }}" class="user-avtar">
+
         <span>Stebin Ben</span>
       </a>
       <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
         <div class="dropdown-header">
           <div class="d-flex mb-1">
             <div class="flex-shrink-0">
-              <img src="../assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar wid-35">
+              <img src="{{asset('assets/images/user/avatar-2.jpg')}}" alt="user-image" class="user-avtar wid-35">
             </div>
             <div class="flex-grow-1 ms-3">
               <h6 class="mb-1">Stebin Ben</h6>
@@ -258,18 +258,31 @@
 </div>
 
 
+<!-- [Page Specific JS] start -->
+<script src="{{ asset('assets/js/plugins/apexcharts.min.js') }}"></script>
+<script src="{{ asset('assets/js/pages/dashboard-default.js') }}"></script>
+<!-- [Page Specific JS] end -->
 
-  <!-- [Page Specific JS] start -->
-  <script src="../assets/js/plugins/apexcharts.min.js"></script>
-  <script src="../assets/js/pages/dashboard-default.js"></script>
-  <!-- [Page Specific JS] end -->
-  <!-- Required Js -->
-  <script src="../assets/js/plugins/popper.min.js"></script>
-  <script src="../assets/js/plugins/simplebar.min.js"></script>
-  <script src="../assets/js/plugins/bootstrap.min.js"></script>
-  <script src="../assets/js/fonts/custom-font.js"></script>
-  <script src="../assets/js/pcoded.js"></script>
-  <script src="../assets/js/plugins/feather.min.js"></script>
+<!-- REQUIRED JS (ĐÚNG THỨ TỰ) -->
+
+<!-- 1. Popper -->
+<script src="{{ asset('assets/js/plugins/popper.min.js') }}"></script>
+
+<!-- 2. Bootstrap -->
+<script src="{{ asset('assets/js/plugins/bootstrap.min.js') }}"></script>
+
+<!-- 3. Simplebar -->
+<script src="{{ asset('assets/js/plugins/simplebar.min.js') }}"></script>
+
+<!-- 4. Apexchart (nếu cần) -->
+<script src="{{ asset('assets/js/plugins/apexcharts.min.js') }}"></script>
+
+<!-- 5. Feather icons -->
+<script src="{{ asset('assets/js/plugins/feather.min.js') }}"></script>
+
+<!-- 6. PCoded (UI script của template) -->
+<script src="{{ asset('assets/js/pcoded.js') }}"></script>
+
   
   <script>layout_change('light');</script>
   
@@ -290,16 +303,18 @@
   
 <script>
 $(document).ready(function() {
-  // Kích hoạt PJAX cho tất cả link có href (trừ #)
-  $(document).pjax('a.pc-link[href!="#"]', '#pc-container', {
-    timeout: 2000
-  });
 
-  // Cho phép mở nhiều submenu cùng lúc
+  $(document).pjax('a.pc-link[href!="#"]', '#pc-container', { timeout: 2000 });
+
   $('.pc-hasmenu > .pc-link').on('click', function(e) {
     e.preventDefault();
     $(this).parent().toggleClass('pc-trigger');
   });
+
+});
+
+$(document).on('pjax:end', function() {
+  feather.replace();
 });
 </script>
 

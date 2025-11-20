@@ -28,67 +28,22 @@
                 margin-left: 5%; table-layout: fixed;border-collapse: collapse;border-color:black;">
                     <thead style="text-align: center;">
                     <tr class="text-white">
-                        <th scope="col" style="width: 5%; word-break: break-word;">STT</th>
-                        <th scope="col" style="width: 5%; word-break: break-word;">IdNhanVien</th>
-                        <th scope="col" style="width: 10%; word-break: break-word;">Tên Nhân Viên</th>
-                        <th scope="col" style="width: 12%; word-break: break-word;">Email</th>
-                        <th scope="col" style="width: 10%; word-break: break-word;">Chỉnh sửa</th>
+                        <th scope="col" style="width: 5%; word-break: break-word;">ID</th>
+                        <th scope="col" style="width: 5%; word-break: break-word;">Tên Nhân Viên</th>
+                        <th scope="col" style="width: 10%; word-break: break-word;">Email</th>
+                        <th scope="col" style="width: 12%; word-break: break-word;">Ngày Tạo</th>
+                        <!-- <th scope="col" style="width: 10%; word-break: break-word;">Chỉnh sửa</th> -->
                     </tr>
                     </thead>
-                    <tbody style="word-break: break-all;">
-                    <tr>
-                        <td style="word-break: break-word;">1</td>
-                        <td style="word-break: break-word;">L01</td>
-                        <td style="word-break: break-word;">Laptop</td>
-                        <td style="word-break: break-word;">DELL</td>
-
-                        <td style="display: flex; justify-content: center; align-items: center;">
-                            <a class="btn btn-sm btn-warning" href="" style="margin-left: 5px;">Edit</a>
-                            <a class="btn btn-sm btn-danger" href="" style="margin-left: 5px;">Delete</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="word-break: break-word;">2</td>
-                        <td style="word-break: break-word;">I01</td>
-                        <td style="word-break: break-word;">Điện thoại</td>
-                        <td style="word-break: break-word;">Iphone 16</td>
-
-                        <td style="display: flex; justify-content: center; align-items: center;">
-                            <a class="btn btn-sm btn-warning" href="" style="margin-left: 5px;">Edit</a>
-                            <a class="btn btn-sm btn-danger" href="" style="margin-left: 5px;">Delete</a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="word-break: break-word;">3</td>
-                        <td style="word-break: break-word;">L02</td>
-                        <td style="word-break: break-word;">Laptop</td>
-                        <td style="word-break: break-word;">ASUS</td>
-
-                        <td style="display: flex; justify-content: center; align-items: center;">
-                            <a class="btn btn-sm btn-warning" href="" style="margin-left: 5px;">Edit</a>
-                            <a class="btn btn-sm btn-danger" href="" style="margin-left: 5px;">Delete</a></td>
-                    </tr>
-                    <tr>
-                        <td style="word-break: break-word;">4</td>
-                        <td style="word-break: break-word;">L03</td>
-                        <td style="word-break: break-word;">Laptop</td>
-                        <td style="word-break: break-word;">LENOVO</td>
-
-                        <td style="display: flex; justify-content: center; align-items: center;">
-                            <a class="btn btn-sm btn-warning" href="" style="margin-left: 5px;">Edit</a>
-                            <a class="btn btn-sm btn-danger" href="" style="margin-left: 5px;">Delete</a></td>
-                    </tr>
-                    <tr>
-                        <td style="word-break: break-word;">5</td>
-                        <td style="word-break: break-word;">I02</td>
-                        <td style="word-break: break-word;">SamSung</td>
-                        <td>$123</td>
-
-                        <td style="display: flex; justify-content: center; align-items: center;">
-                            <a class="btn btn-sm btn-warning" href="" style="margin-left: 5px;">Edit</a>
-                            <a class="btn btn-sm btn-danger" href="" style="margin-left: 5px;">Delete</a></td>
-                    </tr>
+                 <tbody style="word-break: break-all;">
+                        @foreach ($users as $user)
+                        <tr>
+                            <td>{{ $user->id }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->created_at->format('d/m/Y') }}</td>
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

@@ -18,13 +18,15 @@
               <h3 class="mb-0"><b>Login</b></h3>
               <a href="{{Route('register')}}" class="link-primary">Don't have an account?</a>
             </div>
+             <form method="POST" action="{{ route('login') }}">
+    @csrf
             <div class="form-group mb-3">
               <label class="form-label">Email Address</label>
-              <input type="email" class="form-control" placeholder="Email Address">
+              <input type="email" name="email" class="form-control" placeholder="Email Address">
             </div>
             <div class="form-group mb-3">
               <label class="form-label">Password</label>
-              <input type="password" class="form-control" placeholder="Password">
+              <input type="password" name="password" class="form-control" placeholder="Password">
             </div>
             <div class="d-flex mt-1 justify-content-between">
               <div class="form-check">
@@ -34,11 +36,13 @@
               <h5 class="text-secondary f-w-400">Forgot Password?</h5>
             </div>
             <div class="d-grid mt-4">
-              <button type="button" class="btn btn-primary">Login</button>
+              <button type="submit" class="btn btn-primary" value="login">Login</button>
             </div>
+               </form>
             <div class="saprator mt-3">
               <span>Login with</span>
             </div>
+            
             <div class="row">
               <div class="col-6">
                 <div class="d-grid">
@@ -57,6 +61,7 @@
             </div>
           </div>
         </div>
+       
         <div class="auth-footer row">
           <!-- <div class=""> -->
             <div class="col my-1">
@@ -90,5 +95,5 @@
   
   <script>font_change("Public-Sans");</script>
   
-    
+  
 @endsection
