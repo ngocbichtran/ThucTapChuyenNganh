@@ -17,7 +17,7 @@
     <div class="text-start">
         <button type="submit" class="btn btn-success">Search</button>
         </div>
-        </form>
+        </form> 
     </div>
 
     <div class="container" style="margin-right:0px; margin-left:200px;">
@@ -38,10 +38,10 @@
                  <tbody style="word-break: break-all;">
                         @foreach ($users as $user)
                         <tr>
-                            <td>{{ $user->id }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->created_at->format('d/m/Y') }}</td>
+                            <td>{{ $user->ID }}</td>
+                            <td>{{ $user->USER_NAME }}</td>
+                            <td>{{ $user->EMAIL }}</td>
+                            <td>{{ \Carbon\Carbon::parse($user->CREATE_DATE)->format('d/m/Y') }}</td>
                         </tr>
                         @endforeach
                     </tbody>

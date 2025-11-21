@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Category;
+use App\Models\Product;
 
 class AdminController extends Controller
 {
@@ -14,11 +16,13 @@ class AdminController extends Controller
 
     //Product
     public function productlist() {
-        return view('admin.product.product-list');
+        $products = Product::all();
+        return view('admin.product.product-list',compact('products'));
     }
 
     public function categorylist() {
-        return view('admin.product.category-list');
+        $categories = Category::all();
+        return view('admin.product.category-list',compact('categories'));
     }
 
     //Storage
