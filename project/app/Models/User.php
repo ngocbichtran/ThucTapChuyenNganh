@@ -29,4 +29,14 @@ class User extends Authenticatable
     {
         return $this->PASSWORD;
     }
+
+     // Liên kết với Role (FK ROLE_ID)
+    public function user()
+    {
+        return $this->belongsTo(Role::class, 'ROLE_ID', 'ID');
+    }
+        protected $casts = [
+        'CREATE_DATE' => 'datetime',
+        'UPDATE_DATE' => 'datetime',
+    ];
 }

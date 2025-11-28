@@ -1,11 +1,12 @@
 @extends('layout/home')
 @section('body')
  <div style="margin-bottom: 15px; margin-left: 5%; width: 100%; display: flex; justify-content: flex-start;">
-        <button type="button" class="btn btn-default btn-app btn-xs" style="min-width: 60px;
-        margin-top:80px;background-color:green;margin-left:220px;">
-            <i class="fa fa-plus"></i><br>
-            Add
-        </button>
+         <a href="{{ route('product.create') }}"
+                class="btn btn-success btn-app btn-xs"
+                style="min-width: 60px; margin-top:80px; margin-left:280px;">
+                    <i class="fa fa-plus"></i><br>
+                    Add
+                </a>
     </div>
     <div class="container" style="margin-right:0px; margin-left:200px;">
         <div class=" text-center rounded p-4">

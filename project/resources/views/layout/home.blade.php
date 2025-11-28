@@ -59,20 +59,23 @@
           <a class="pc-link"><span class="pc-micon"><i class="ti ti-package"></i></span><span class="pc-mtext">Sản phẩm
               </span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
           <ul class="pc-submenu">
-            <li class="pc-item"><a class="pc-link" href="{{route('product-category')}}">Danh sách category</a></li>
-            <li class="pc-item"><a class="pc-link" href="{{route('product-product')}}">Danh sách sản phẩm</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{route('category.index')}}">Danh sách category</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{route('product.index')}}">Danh sách sản phẩm</a></li>
            
           </ul>
         </li>
+
+
+
         <!-- //Sản phẩm end -->
          <!-- //Kho start -->
         <li class="pc-item pc-hasmenu">
           <a class="pc-link"><span class="pc-micon"><i class="ti ti-transfer-in "></i></span><span class="pc-mtext">Kho
               </span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
           <ul class="pc-submenu">
-            <li class="pc-item"><a class="pc-link" href="{{route('storage-nhapkho')}}">Danh sách nhập kho</a></li>
-            <li class="pc-item"><a class="pc-link" href="{{route('storage-xuatkho')}}">Danh sách xuất kho</a></li>
-            <li class="pc-item"><a class="pc-link" href="{{route('storage-trongkho')}}">Danh sách trong kho</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{route('nhap.index')}}">Danh sách nhập kho</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{route('xuat.index')}}">Danh sách xuất kho</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{route('tonkho.index')}}">Danh sách trong kho</a></li>
             <li class="pc-item"><a class="pc-link" href="{{route('storage-lichsukho')}}">Lịch sử kho</a></li>
           </ul>
         </li>
@@ -82,8 +85,8 @@
           <a class="pc-link"><span class="pc-micon"><i class="ti ti-puzzle"></i></span><span class="pc-mtext">Quản lý
               </span><span class="pc-arrow"><i data-feather="chevron-right"></i></span></a>
           <ul class="pc-submenu">
-            <li class="pc-item"><a class="pc-link" href="{{route('manegement-user')}}">Danh sách user</a></li>
-            <li class="pc-item"><a class="pc-link" href="{{route('manegement-role')}}">Danh sách quyền</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{route('user.index')}}">Danh sách user</a></li>
+            <li class="pc-item"><a class="pc-link" href="{{route('role.index')}}">Danh sách quyền</a></li>
           </ul>
         </li>
         <!-- //Quản lý end -->
@@ -165,7 +168,7 @@
   </ul>
 </div>
 <!-- [Mobile Media Block end] -->
-<div class="ms-auto">
+<div >
   <ul class="list-unstyled">
     
     <li class="dropdown pc-h-item header-user-profile">
@@ -180,7 +183,7 @@
       >
        <img src="{{ asset('assets/images/user/avatar-2.jpg') }}" class="user-avtar">
 
-        <span>Stebin Ben</span>
+        <span>Ngọc Bích Cute</span>
       </a>
       <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
         <div class="dropdown-header">

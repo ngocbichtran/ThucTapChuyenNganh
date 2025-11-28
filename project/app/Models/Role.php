@@ -2,34 +2,27 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
-
-class Product extends Model
+use App\Models\Role;
+class Role extends Model
 {
-   use HasFactory;
+    use HasFactory, Notifiable;
 
-    protected $table = 'product_info';
+    protected $table = 'role';
     protected $primaryKey = 'ID';
     public $timestamps = false;
 
     protected $fillable = [
-        'CATE_ID',
-        'NAME',
+        'ROLE_NAME',
         'DESCRIPTION',
-        'IMG_URL',
         'ACTIVE_FLAG',
         'CREATE_DATE',
         'UPDATE_DATE',
     ];
-
-    protected $casts = [
+        protected $casts = [
         'CREATE_DATE' => 'datetime',
         'UPDATE_DATE' => 'datetime',
     ];
-
-    // Liên kết với Category (FK CATE_ID)
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'CATE_ID', 'ID');
-    }
 }
