@@ -39,17 +39,12 @@
                     <input type="password" name="password" class="form-control" placeholder="Password">
                   </div>
                   <div class="d-flex mt-1 justify-content-between">
-                    <div class="form-check">
-                      <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="">
-                      <label class="form-check-label text-muted" for="customCheckc1">Keep me sign in</label>
-                    </div>
-                    <h5 class="text-secondary f-w-400">Forgot Password?</h5>
                   </div>
                   <div class="d-grid mt-4">
                     <button type="submit" class="btn btn-primary" value="login">Login</button>
                   </div>
                </form>
-            <div class="saprator mt-3">
+            <!-- <div class="saprator mt-3">
               <span>Login with</span>
             </div>
             <div class="row">
@@ -67,7 +62,7 @@
                   </button>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
        

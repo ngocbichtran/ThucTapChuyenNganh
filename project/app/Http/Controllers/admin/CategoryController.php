@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin\product;
+namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -11,10 +11,38 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::all();
-        return view('admin.product.category-list', compact('categories'));
+       $keyword = $request->keyword;
+        $status  = $request->status;
+
+        // Query theo trạng thái
+        if ($status == 'trash') {
+            $query = Category::onlyTrashed();
+        } else {
+            $query = Category::query();
+        }
+
+        // Tìm kiếm
+        if ($keyword) {
+            $query->where('TYPE', 'LIKE', "%$keyword%");
+        }
+
+        // Phân trang
+        $categories = $query->orderBy('ID', 'DESC')
+                          ->paginate(5)
+                          ->withQueryString();
+
+        // Đếm số lượng
+       $count = [
+        'all'    => Category::count(), 
+        'trash'  => Category::onlyTrashed()->count(),
+
+        'active' => Category::where('ACTIVE_FLAG', 1)->count(),
+        'inactive' => Category::where('ACTIVE_FLAG', 0)->count(),
+        ];
+
+        return view('admin.category.index', compact('categories', 'keyword', 'count', 'status'));
     }
 
     /**
@@ -22,7 +50,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.product.addCategory');
+        return view('admin.category.create');
     }
 
     /**
@@ -45,7 +73,7 @@ class CategoryController extends Controller
         ]);
 
         return redirect()
-            ->route('category.index')
+            ->route('admin.category.index')
             ->with('success', 'Thêm category thành công!');
     }
 
@@ -81,7 +109,7 @@ class CategoryController extends Controller
             'UPDATE_DATE' => now(),
         ]);
         if($category)
-            return redirect()->route('category.index')->with('success', 'Cập nhật category thành công!');
+            return redirect()->route('admin.category.index')->with('success', 'Cập nhật category thành công!');
         else
             return back();
     }
@@ -94,11 +122,11 @@ class CategoryController extends Controller
     try {
         Category::where('ID', $id)->delete();
         return redirect()
-            ->route('category.index')
+            ->route('admin.category.index')
             ->with('success', 'Xóa category thành công!');
     } catch (\Illuminate\Database\QueryException $e) {
         return redirect()
-            ->route('category.index')
+            ->route('admin.category.index')
             ->with('error', 'Không thể xoá vì category đang được sử dụng trong sản phẩm!');
     }
 }

@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\admin\storage;
+namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class TonKhoController extends Controller
+class XuatController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-       return view('admin.storage.trongkho-list');
+        return view('admin.storage.xuatkho-list');
     }
 
     /**

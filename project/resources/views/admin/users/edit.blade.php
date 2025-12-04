@@ -2,14 +2,25 @@
 
 @section('body')
 <div class="container" style="margin-left: 305px; padding-top: 120px;">
-    <form action="{{ route('user.store') }}" method="POST" class="form-inline"
+    <form action="{{ route('admin.user.store') }}" method="POST" class="form-inline"
           style="max-width: 400px; margin-left: 200px;">
           
         @csrf
-
+        @if(isset($users))
+            @method('PUT')
+        @endif
+         @if ($errors->any())
+            <div class="alert alert-danger" style="margin-bottom: 20px;">
+                <ul style="margin: 0; padding-left: 20px;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="form-group mb-3 d-flex align-items-center">
             <label for="name" style="width: 80px;">User Name</label>
-            <input type="text" id="username" name="USER_NAME" class="form-control" style="flex: 1;">
+            <input type="text" id="username" name="USER_NAME" class="form-control" style="flex: 1;" value="{{ old('USER_NAME', $user->USER_NAME ?? '') }}">
         </div>
 
         <div class="form-group mb-3 d-flex align-items-center">

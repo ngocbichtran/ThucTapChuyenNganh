@@ -72,7 +72,7 @@
 			<nav class="limiter-menu-desktop container">
 					<!-- Logo desktop -->		
 					<div class="logo">
-						<img src="{{ asset('assetShop/images/icons/CabyShopTrang.png') }}" alt="IMG-LOGO">
+						
 						<h3 style="margin-left:10px;">CapyShop</h3>
 					</div>
 					
@@ -83,13 +83,6 @@
 								<a href="{{route('shop')}}">Home</a>
 							</li>
 
-							<li>
-								<a href="{{route('shop-product')}}">Product</a>
-							</li>
-
-							<!-- <li>
-								<a href="{{route('shop-category')}}">Category</a>
-							</li> -->
 						</ul>
 					</div>	
 
@@ -112,9 +105,7 @@
 
 
 
-						<a href="{{route('shop-cart')}}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="2">
-							<i class="zmdi zmdi-shopping-cart"></i>
-						</a>
+						
 
 						<!-- <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
 							<i class="zmdi zmdi-favorite-outline"></i>
@@ -184,12 +175,8 @@
 						<i class="fa fa-angle-right" aria-hidden="true"></i>
 					</span>
 				</li>
-				<li>
-				<a href="{{route('shop-product')}}">Product</a>
-				</li>
-				<li>
-					<a href="{{route('shop-category')}}">Category</a>
-				</li>
+
+
 			</ul>
 		</div>
 

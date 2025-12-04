@@ -82,7 +82,7 @@
 
                     </form>
 
-                    <div class="saprator mt-1">
+                    <!-- <div class="saprator mt-1">
                         <span>Sign up with</span>
                     </div>
 
@@ -104,7 +104,7 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
             </div>

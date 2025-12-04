@@ -3,10 +3,10 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model
 {
-   use HasFactory;
+   use HasFactory, SoftDeletes;
 
     protected $table = 'product_info';
     protected $primaryKey = 'ID';
@@ -17,6 +17,7 @@ class Product extends Model
         'NAME',
         'DESCRIPTION',
         'IMG_URL',
+        'PRICE',
         'ACTIVE_FLAG',
         'CREATE_DATE',
         'UPDATE_DATE',
