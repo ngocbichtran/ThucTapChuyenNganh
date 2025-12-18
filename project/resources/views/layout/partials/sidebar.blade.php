@@ -42,7 +42,6 @@
                             <li class="pc-item"><a class="pc-link" href="{{ route('admin.nhap.index') }}">Danh sách nhập kho</a></li>
                             <li class="pc-item"><a class="pc-link" href="{{ route('admin.xuat.index') }}">Danh sách xuất kho</a></li>
                             <li class="pc-item"><a class="pc-link" href="{{ route('admin.tonkho.index') }}">Danh sách trong kho</a></li>
-                            <li class="pc-item"><a class="pc-link" href="{{ route('storage-lichsukho') }}">Lịch sử kho</a></li>
                         </ul>
                     </li>
 

@@ -44,25 +44,26 @@
                     <button type="submit" class="btn btn-primary" value="login">Login</button>
                   </div>
                </form>
-            <!-- <div class="saprator mt-3">
+            <div class="saprator mt-3">
               <span>Login with</span>
             </div>
             <div class="row">
               <div class="col-6">
                 <div class="d-grid">
-                  <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="../assets/images/authentication/google.svg" alt="img"> <span class="d-none d-sm-inline-block"> Google</span>
-                  </button>
+                  <a href="{{ route('google.login') }}" class="btn mt-2 btn-light-primary bg-light text-muted d-grid">
+                    <img src="{{ asset('assets/images/authentication/google.svg') }}" alt="img">
+                    <span class="d-none d-sm-inline-block"> Google</span>
+                </a>
                 </div>
               </div>
-              <div class="col-6">
+              <!-- <div class="col-6">
                 <div class="d-grid">
                   <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
                     <img src="../assets/images/authentication/facebook.svg" alt="img"> <span class="d-none d-sm-inline-block"> Facebook</span>
                   </button>
                 </div>
-              </div>
-            </div> -->
+              </div> -->
+            </div>
           </div>
         </div>
        

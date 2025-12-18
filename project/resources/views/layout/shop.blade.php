@@ -4,7 +4,6 @@
 	<title>CapyShop</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <base href="{{ asset('assetShop/') }}">
 	<link rel="icon" type="image/png" href="{{ asset('assetShop/images/icons/favicon.png') }}"/>
 	<link rel="stylesheet" type="text/css" href="{{ asset('assetShop/vendor/bootstrap/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assetShop/fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
@@ -55,18 +54,34 @@
 		<div class="container-menu-desktop">
 			<div class="top-bar">
 				<div class="content-topbar flex-sb-m h-full container">
-					<div class="left-top-bar">
-						Chất Lượng Hàng Đầu
-					</div>
-					<div class="right-top-bar flex-w h-full">
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							Login
-						</a>
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
+				<div class="left-top-bar">
+				Chất Lượng Hàng Đầu
+			</div>
+
+			<div class="right-top-bar flex-w h-full">
+
+				@guest
+					<a href="{{ route('login') }}" class="flex-c-m trans-04 p-lr-25">
+						Login
+					</a>
+				@endguest
+
+				@auth
+					<span class="flex-c-m trans-04 p-lr-15">
+						{{ Auth::user()->USER_NAME }}
+					</span>
+
+					<form action="{{ route('logout') }}" method="POST">
+						@csrf
+						<button type="submit" class="flex-c-m trans-04 p-lr-25"
+							style="background:none;border:none;color:inherit;">
 							Logout
-						</a>
-					</div>
-				</div>
+						</button>
+					</form>
+				@endauth
+
+			</div>
+
 			</div>
 			<div class="wrap-menu-desktop">
 			<nav class="limiter-menu-desktop container">

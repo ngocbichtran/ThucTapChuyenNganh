@@ -22,6 +22,8 @@ class User extends Authenticatable
         'ACTIVE_FLAG',
         'CREATE_DATE',
         'UPDATE_DATE',
+        'google_id',
+        'role',
     ];
 
     // Lấy đúng cột mật khẩu từ DB
