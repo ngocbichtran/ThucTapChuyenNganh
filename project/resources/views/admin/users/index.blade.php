@@ -135,15 +135,21 @@
                                             Sửa
                                         </a>
 
+                                       @if($user->role !== 'superadmin'
+                                        && !(auth()->user()->role === 'admin' && $user->role === 'admin')
+                                        && auth()->id() != $user->ID
+                                    )
                                         <form action="{{ route('admin.user.destroy', $user->ID) }}"
-                                              method="POST"
-                                              onsubmit="return confirm('Vô hiệu hóa user này?')">
+                                            method="POST"
+                                            onsubmit="return confirm('Vô hiệu hóa user này?')">
                                             @csrf
                                             @method('DELETE')
                                             <button class="btn btn-warning btn-sm">
                                                 Vô hiệu hóa
                                             </button>
                                         </form>
+                                    @endif
+
                                     @else
                                         <form action="{{ route('admin.user.restore', $user->ID) }}"
                                               method="POST"

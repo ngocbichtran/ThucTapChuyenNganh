@@ -156,11 +156,32 @@ class UserController extends Controller
     ======================== */
     public function destroy($id)
     {
-        User::where('ID', $id)->delete();
+        $user = User::findOrFail($id);
+
+        // Không cho xóa superadmin
+        if ($user->role === 'superadmin') {
+            return redirect()->back()
+                ->with('error', 'Không thể vô hiệu hóa Superadmin!');
+        }
+
+        // Không cho admin tự xóa chính mình
+        if (auth()->id() == $user->ID) {
+            return redirect()->back()
+                ->with('error', 'Bạn không thể tự vô hiệu hóa chính mình!');
+        }
+
+        // Admin thường không được xóa admin khác
+        if (auth()->user()->role === 'admin' && $user->role === 'admin') {
+            return redirect()->back()
+                ->with('error', 'Admin không thể vô hiệu hóa Admin khác!');
+        }
+
+        $user->delete();
 
         return redirect()->route('admin.user.index')
             ->with('success', 'Vô hiệu hóa user thành công!');
     }
+
 
     /* =======================
         KHÔI PHỤC
