@@ -63,6 +63,17 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Giá sản phẩm</label>
+                                    <input type="number"
+                                        name="PRICE"
+                                        class="form-control"
+                                        value="{{ old('PRICE') }}"
+                                        min="0">
+                                    @error('PRICE')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Hình ảnh (URL)</label>

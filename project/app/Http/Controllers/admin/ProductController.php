@@ -12,36 +12,45 @@ class ProductController extends Controller
     // LIST
     public function index(Request $request)
     {
-        $status  = $request->input('status');
+        $status = $request->input('status', 'all');
         $keyword = $request->input('keyword');
 
-        // Query gốc
         $query = Product::query();
 
-        // Lọc theo trạng thái
         if ($status === 'trash') {
-            $query = Product::onlyTrashed();
+            $query->onlyTrashed();
         } else {
-            $query = Product::withoutTrashed();
+            $query->withoutTrashed();
+
+            if ($status === 'active') {
+                $query->where('ACTIVE_FLAG', 1);
+            }
+
+            if ($status === 'inactive') {
+                $query->where('ACTIVE_FLAG', 0);
+            }
 
             if ($keyword) {
                 $query->where(function ($q) use ($keyword) {
                     $q->where('NAME', 'LIKE', "%$keyword%")
-                      ->orWhere('DESCRIPTION', 'LIKE', "%$keyword%");
+                    ->orWhere('DESCRIPTION', 'LIKE', "%$keyword%");
                 });
             }
         }
+
+
 
         // Phân trang
         $products = $query->paginate(4)->withQueryString();
 
         // Đếm
         $count = [
-            'all'      => Product::count(),
+            'all' => Product::withoutTrashed()->count(),
             'active'   => Product::withoutTrashed()->where('ACTIVE_FLAG', 1)->count(),
-            'inactive'   => Product::withoutTrashed()->where('ACTIVE_FLAG', 0)->count(),
+            'inactive' => Product::withoutTrashed()->where('ACTIVE_FLAG', 0)->count(),
             'trash'    => Product::onlyTrashed()->count(),
         ];
+
 
         return view('admin.product.index', compact(
             'products',
@@ -102,7 +111,7 @@ class ProductController extends Controller
             'CATE_ID'     => 'required|integer|exists:category,ID',
             'NAME'        => 'required|string|max:190',
             'DESCRIPTION' => 'nullable|string',
-            'PRICE'       => 'required|integer',
+            'PRICE'       => 'required|numeric|min:0',
             'IMG_URL'     => 'nullable|string|max:200',
             'ACTIVE_FLAG' => 'required|integer|in:0,1',
         ]);

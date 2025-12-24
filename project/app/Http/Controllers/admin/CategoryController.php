@@ -9,45 +9,46 @@ use App\Models\Category;
 class CategoryController extends Controller
 {
     // ================= LIST =================
-    public function index(Request $request)
-    {
-        $status  = $request->input('status');
-        $keyword = $request->input('keyword');
+   public function index(Request $request)
+{
+    $status  = $request->input('status');
+    $keyword = $request->input('keyword');
 
-        // Bắt đầu query
-        $query = Category::query();
+    // Query gốc
+    $query = Category::query();
 
-        // Lọc trạng thái
-        if ($status === 'trash') {
-            $query = Category::onlyTrashed();
-        }
-
-        // Tìm kiếm
-        if ($keyword) {
-            $query->where('TYPE', 'LIKE', '%' . $keyword . '%');
-        }
-
-        // Phân trang
-        $categories = $query
-            ->orderBy('ID', 'DESC')
-            ->paginate(5)
-            ->withQueryString();
-
-        // Đếm trạng thái
-        $count = [
-            'all'      => Category::count(),
-            'active'   => Category::where('ACTIVE_FLAG', 1)->count(),
-            'inactive' => Category::where('ACTIVE_FLAG', 0)->count(),
-            'trash'    => Category::onlyTrashed()->count(),
-        ];
-
-        return view('admin.category.index', compact(
-            'categories',
-            'keyword',
-            'count',
-            'status'
-        ));
+    // Lọc thùng rác
+    if ($status === 'trash') {
+        $query->onlyTrashed();
     }
+
+    // Tìm kiếm
+    if ($keyword) {
+        $query->where('TYPE', 'LIKE', "%{$keyword}%");
+    }
+
+    // Phân trang
+    $categories = $query
+        ->orderBy('ID', 'DESC')
+        ->paginate(5)
+        ->withQueryString();
+
+    // Đếm trạng thái
+    $count = [
+        'all'      => Category::withTrashed()->count(),
+        'active'   => Category::where('ACTIVE_FLAG', 1)->count(),
+        'inactive' => Category::where('ACTIVE_FLAG', 0)->count(),
+        'trash'    => Category::onlyTrashed()->count(),
+    ];
+
+    return view('admin.category.index', compact(
+        'categories',
+        'keyword',
+        'count',
+        'status'
+    ));
+}
+
 
     // ================= CREATE =================
     public function create()

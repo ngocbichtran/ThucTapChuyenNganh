@@ -49,9 +49,11 @@
                                 Tên loại <span class="text-danger">*</span>
                             </label>
                             <input type="text"
-                                   name="TYPE"
-                                   class="form-control"
-                                   placeholder="Ví dụ: Đồ uống">
+                                    name="TYPE"
+                                    class="form-control"
+                                    value="{{ old('TYPE') }}"
+                                    placeholder="Ví dụ: Đồ uống">
+
                             @error('TYPE')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -62,9 +64,14 @@
                                 Trạng thái
                             </label>
                             <select name="ACTIVE_FLAG" class="form-select">
-                                <option value="1">Đã bày bán</option>
-                                <option value="0">Chưa bày bán</option>
+                                <option value="1" {{ old('ACTIVE_FLAG', 1) == 1 ? 'selected' : '' }}>
+                                    Đã bày bán
+                                </option>
+                                <option value="0" {{ old('ACTIVE_FLAG') === '0' ? 'selected' : '' }}>
+                                    Chưa bày bán
+                                </option>
                             </select>
+
                         </div>
                     </div>
 
@@ -73,9 +80,9 @@
                             Mô tả
                         </label>
                         <textarea name="DESCRIPTION"
-                                  rows="3"
-                                  class="form-control"
-                                  placeholder="Mô tả ngắn về loại sản phẩm"></textarea>
+                                rows="3"
+                                class="form-control"
+                                placeholder="Mô tả ngắn về loại sản phẩm">{{ old('DESCRIPTION') }}</textarea>
                         @error('DESCRIPTION')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror

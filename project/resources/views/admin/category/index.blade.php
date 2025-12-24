@@ -111,7 +111,6 @@
         {{-- Table --}}
         <div class="card">
             <div class="card-body p-0">
-
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover text-center align-middle m-0 fixed-row">
                         <thead style="background:#e8efff;">
@@ -126,22 +125,34 @@
                         </thead>
 
                         <tbody>
-                            @php $i = ($categories->currentPage() - 1) * $categories->perPage() + 1; @endphp
-                            @foreach ($categories as $category)
+                            @php
+                                $i = ($categories->currentPage() - 1) * $categories->perPage() + 1;
+                            @endphp
+
+                            @forelse ($categories as $category)
                                 <tr>
                                     <td>{{ $i++ }}</td>
                                     <td>{{ $category->TYPE }}</td>
                                     <td class="text-start">{{ $category->DESCRIPTION }}</td>
+
+                                    {{-- TRẠNG THÁI --}}
                                     <td>
-                                        <span class="badge {{ $category->ACTIVE_FLAG ? 'bg-success' : 'bg-secondary' }}">
-                                            {{ $category->ACTIVE_FLAG ? 'Đang bán' : 'Chưa bán' }}
-                                        </span>
+                                        @if($status === 'trash')
+                                            <span class="badge bg-danger">Đã xóa</span>
+                                        @else
+                                            <span class="badge {{ $category->ACTIVE_FLAG ? 'bg-success' : 'bg-secondary' }}">
+                                                {{ $category->ACTIVE_FLAG ? 'Đang bán' : 'Chưa bán' }}
+                                            </span>
+                                        @endif
                                     </td>
+
                                     <td>
                                         {{ $category->CREATE_DATE
                                             ? \Carbon\Carbon::parse($category->CREATE_DATE)->format('d/m/Y')
                                             : '-' }}
                                     </td>
+
+                                    {{-- HÀNH ĐỘNG --}}
                                     <td>
                                         @if ($status !== 'trash')
                                             <a href="{{ route('admin.category.edit', $category->ID) }}"
@@ -151,7 +162,8 @@
 
                                             <form action="{{ route('admin.category.destroy', $category->ID) }}"
                                                   method="POST"
-                                                  class="d-inline">
+                                                  class="d-inline"
+                                                  onsubmit="return confirm('Bạn có chắc muốn xóa danh mục này?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-sm btn-outline-warning">
@@ -170,11 +182,17 @@
                                         @endif
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-muted py-4">
+                                        Không có dữ liệu
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
+
                     </table>
                 </div>
-
             </div>
         </div>
 
