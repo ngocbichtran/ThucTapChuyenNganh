@@ -4,62 +4,144 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\ImportReceipt;
+use App\Models\ImportReceiptDetail;
+use App\Models\Inventory;
+use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class NhapController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Danh sách phiếu nhập kho
      */
     public function index()
     {
-        return view('admin.storage.nhapkho-list');
+        $receipts = ImportReceipt::orderBy('created_at', 'desc')->get();
+        return view('admin.storage.nhapkho-list', compact('receipts'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Form tạo phiếu nhập kho
      */
     public function create()
     {
-        //
+        $products = Product::where('ACTIVE_FLAG', 1)->get();
+        return view('admin.storage.nhapkho-create', compact('products'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Lưu phiếu nhập kho (chưa duyệt)
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'supplier' => 'required|string|max:255',
+            'products' => 'required|array|min:1',
+            'products.*.product_id' => 'required|exists:product_info,ID',
+            'products.*.quantity'   => 'required|integer|min:1',
+            'products.*.price'      => 'required|numeric|min:0',
+        ]);
+
+        DB::transaction(function () use ($request) {
+
+            // 1️⃣ Tạo phiếu nhập
+            $receipt = ImportReceipt::create([
+                'receiptCode' => 'PN' . time(),
+                'createdBy'   => Auth::id(),
+                'supplier'    => $request->supplier,
+                'note'        => $request->note,
+                'status'      => 'pending',
+                'totals'       => 0,
+            ]);
+
+            // 2️⃣ Lưu chi tiết + tính tổng tiền
+            $total = 0;
+
+            foreach ($request->products as $item) {
+                ImportReceiptDetail::create([
+                    'import_receipt_id' => $receipt->id,
+                    'product_id'        => $item['product_id'],
+                    'quantity'          => $item['quantity'],
+                    'price'             => $item['price'],
+                ]);
+
+                $total += $item['quantity'] * $item['price'];
+            }
+
+            // 3️⃣ Cập nhật tổng tiền
+            $receipt->update([
+                'totals' => $total
+            ]);
+        });
+
+        return redirect()->route('admin.nhap.index')
+            ->with('success', 'Tạo phiếu nhập kho thành công');
     }
 
     /**
-     * Display the specified resource.
+     * Xem chi tiết phiếu nhập
      */
-    public function show(string $id)
+    public function show(ImportReceipt $nhap)
     {
-        //
+        $nhap->load('details.product');
+
+        return view('admin.storage.nhapkho-details', [
+            'receipt' => $nhap
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Duyệt phiếu nhập → cập nhật tồn kho
      */
     public function update(Request $request, string $id)
     {
-        //
+        DB::transaction(function () use ($id) {
+
+            $receipt = ImportReceipt::with('details')->findOrFail($id);
+
+            if ($receipt->status !== 'pending') {
+                abort(403, 'Phiếu nhập đã được xử lý');
+            }
+
+            foreach ($receipt->details as $detail) {
+
+                $inventory = Inventory::firstOrCreate(
+                    ['product_id' => $detail->product_id],
+                    [
+                        'quantity' => 0,
+                        'initial_quantity' => 0
+                    ]
+                );
+
+                $inventory->quantity += $detail->quantity;
+                $inventory->initial_quantity += $detail->quantity;
+                $inventory->save();
+            }
+
+            $receipt->update([
+                'status' => 'completed'
+            ]);
+        });
+
+        return redirect()->back()
+            ->with('success', 'Duyệt phiếu nhập kho thành công');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Xóa phiếu nhập (chỉ khi chưa duyệt)
      */
     public function destroy(string $id)
     {
-        //
+        $receipt = ImportReceipt::findOrFail($id);
+
+        if ($receipt->status !== 'pending') {
+            return back()->with('error', 'Không thể xóa phiếu đã duyệt');
+        }
+
+        $receipt->delete();
+
+        return back()->with('success', 'Đã xóa phiếu nhập kho');
     }
 }

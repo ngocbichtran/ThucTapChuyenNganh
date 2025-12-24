@@ -135,7 +135,7 @@
         </span>
 
         <!-- ADMIN CONTROL -->
-        @if(Auth::user()->role === 'admin')
+        @if(Auth::user()->role === 'admin' || Auth::user()->role === 'superadmin')
             <a href="{{ route('admin.dashboard') }}"
                class="btn btn-sm btn-outline-danger rounded-pill fw-semibold d-flex align-items-center gap-1">
                 <span class="material-symbols-outlined fs-6">

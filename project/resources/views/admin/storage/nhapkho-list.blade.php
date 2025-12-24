@@ -1,35 +1,75 @@
 @extends('layout/home')
+
+@section('title', 'Danh sách phiếu nhập kho')
+
 @section('body')
- <div class="container" style="margin-right:0px; margin-left:475px;  padding-top: 100px;padding-bottom: 0px;">
-        <form class="form-inline" style="max-width: 400px; margin-left:200px;margin-right:0px;">
-            <div class="form-group mb-3 d-flex align-items-center">
-                <label for="id" style="width: 80px;">ID</label>
-                <input type="text" id="id" name="id" class="form-control" style="flex: 1;">
-            </div>
-            <div class="form-group mb-3 d-flex align-items-center">
-                <label for="code" style="width: 80px;">Code</label>
-                <input type="text" id="code" name="code" class="form-control" style="flex: 1;">
-            </div>
-            <div class="form-group mb-3 d-flex align-items-center">
-                <label for="name" style="width: 80px;">Name</label>
-                <input type="text" id="name" name="name" class="form-control" style="flex: 1;">
-            </div>
-            <div class="form-group d-flex align-items-center">
+<div class="container-fluid">
 
-                <label for="productSelect" class="mb-0 me-3" style="width: 80px;">
-                    Product
-                </label>
-                <select class="form-control flex-grow-1" id="productSelect" required>
-                    <option selected>Xiaomi mi 8</option>
-                    <option>Sản phẩm khác</option>
-                </select>
-
-            </div>
-            <div class="text-start">
-                <button type="submit" class="btn btn-danger">Cancel</button>
-                <button type="submit" class="btn btn-secondary">Reset</button>
-                <button type="submit" class="btn btn-success">Search</button>
-            </div>
-        </form>
+    <!-- Page title -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">📦 Danh sách phiếu nhập kho</h4>
+        <a href="{{ route('admin.nhap.create') }}" class="btn btn-primary">
+            + Tạo phiếu nhập
+        </a>
     </div>
+
+    <!-- Table -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Nhà cung cấp</th>
+                        <th>Ngày nhập</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th width="180">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($receipts as $index => $receipt)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+
+                            <td>{{ $receipt->supplier }}</td>
+
+                            <td>
+                                {{ $receipt->created_at->format('d/m/Y H:i') }}
+                            </td>
+
+                            <td>
+                                {{$receipt->totals }} đ
+                            </td>
+
+                            <td>
+                                @if($receipt->status == 'pending')
+                                    <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                @elseif($receipt->status == 'completed')
+                                    <span class="badge bg-success">Đã duyệt</span>
+                                @else
+                                    <span class="badge bg-secondary">Hủy</span>
+                                @endif
+                            </td>
+
+                            <td>
+                               <a href="{{ route('admin.nhap.show', $receipt->id) }}"
+                                class="btn btn-sm btn-info">
+                                    Chi tiết
+                               </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                Chưa có phiếu nhập nào
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
 @endsection
