@@ -29,8 +29,22 @@ class Product extends Model
     ];
 
     // Liên kết với Category (FK CATE_ID)
-    public function category()
+        public function category()
     {
-        return $this->belongsTo(Category::class, 'CATE_ID', 'ID');
+        return $this->belongsTo(
+            Category::class,
+            'CATE_ID', // FK trong product_info
+            'ID'       // PK trong category
+        );
     }
+
+        public function importDetails()
+    {
+        return $this->hasMany(
+            ImportReceiptDetail::class,
+            'product_id',
+            'ID'
+        );
+    }
+
 }
