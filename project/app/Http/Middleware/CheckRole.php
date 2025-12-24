@@ -13,12 +13,17 @@ class CheckRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-        public function handle($request, Closure $next, $role)
+        public function handle($request, Closure $next, ...$roles)
     {
-        if (!Auth::check() || Auth::user()->role !== $role) {
+        if (!Auth::check()) {
+            abort(403);
+        }
+
+        if (!in_array(Auth::user()->role, $roles)) {
             abort(403, 'Bạn không có quyền truy cập');
         }
 
         return $next($request);
     }
+
 }

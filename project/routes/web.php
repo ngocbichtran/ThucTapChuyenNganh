@@ -15,26 +15,17 @@ use App\Http\Controllers\Admin\TonKhoController;
 
 use App\Http\Controllers\Auth\GoogleController;
 
-/*
-|--------------------------------------------------------------------------
-| PUBLIC
-|--------------------------------------------------------------------------
-*/
-
+/* PUBLIC*/
 // Trang shop (ai cũng xem được)
 Route::get('/', [ShopController::class, 'index'])->name('shop');
 
 // Auth mặc định Laravel
 Auth::routes();
 
-/*
-|--------------------------------------------------------------------------
-| ADMIN (chỉ admin)
-|--------------------------------------------------------------------------
-*/
+/* ADMIN (chỉ admin) */
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware(['auth', 'role:admin'])
+    ->middleware(['auth', 'role:admin,superadmin'])
     ->group(function () {
 
         // Trang chính admin
@@ -48,7 +39,7 @@ Route::prefix('admin')
         Route::resource('category', CategoryController::class);
         Route::resource('product', ProductController::class);
         Route::resource('user', UserController::class);
-        Route::resource('role', RoleController::class);
+        Route::get('user/create', [UserController::class, 'create'])->name('user.create');
         Route::resource('xuat', XuatController::class);
         Route::resource('nhap', NhapController::class);
         Route::resource('tonkho', TonKhoController::class);
@@ -56,13 +47,13 @@ Route::prefix('admin')
         // Restore user
         Route::post('user/restore/{id}', [UserController::class, 'restore'])
             ->name('user.restore');
+        Route::post('product/restore/{id}', [ProductController::class, 'restore'])
+            ->name('product.restore');
+        Route::post('category/restore/{id}', [CategoryController::class, 'restore'])
+            ->name('category.restore');
     });
 
-/*
-|--------------------------------------------------------------------------
-| GOOGLE LOGIN
-|--------------------------------------------------------------------------
-*/
+/* GOOGLE LOGIN */
 Route::get('/auth/google', [GoogleController::class, 'redirect'])
     ->name('google.login');
 

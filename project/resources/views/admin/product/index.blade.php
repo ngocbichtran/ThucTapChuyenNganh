@@ -3,162 +3,140 @@
 @section('body')
 
 <style>
-    /* ==== TABLE FIX SIZE ==== */
-    .fixed-table {
-        table-layout: fixed;
-        width: 100%;
+    .table td, .table th {
+        vertical-align: middle;
     }
-    .fixed-table th,
-    .fixed-table td {
+    .truncate {
+        max-width: 280px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
-    .col-name { width: 150px; }
-    .col-desc { width: 300px; white-space: normal !important; text-overflow: unset !important; }
-    .col-img  { width: 120px; }
-    .col-status { width: 100px; }
-    .col-date { width: 130px; }
-    .col-action { width: 160px; }
-
-    /* ==== PAGINATION CUSTOM ==== */
-    .pagination { gap: 6px; }
-    .pagination .page-item .page-link {
-        border-radius: 8px !important;
-        padding: 8px 14px;
-        border: 1px solid #d0d7e2;
-        color: #4a6fa5;
-        background: #f8fbff;
-        transition: 0.25s;
-        font-weight: 500;
-    }
-    .pagination .page-item .page-link:hover {
-        background: #e3ecf7;
-        color: #2f4d6b;
-    }
-    .pagination .page-item.active .page-link {
-        background: #4a6fa5 !important;
-        border-color: #4a6fa5 !important;
-        color: #fff !important;
-        box-shadow: 0 0 6px rgba(74,111,165,0.4);
-    }
-    .pagination .page-item.disabled .page-link {
-        background: #f0f4f9;
-        color: #a0aec0;
-    }
 </style>
 
-<div class="container">
+<div class="container-fluid px-4">
 
-    <!-- Header: Add - Filter - Search -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    {{-- ===== HEADER ===== --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold text-primary mb-0">Quản lý sản phẩm</h4>
 
-        <!-- Nút thêm -->
         <a href="{{ route('admin.product.create') }}"
-           class="btn btn-success shadow-sm px-3 py-2">
-            <i class="fa fa-plus me-1"></i> Add
+           class="btn btn-success shadow-sm">
+            <i class="fa fa-plus me-1"></i> Thêm sản phẩm
         </a>
-
-        <!-- Filter -->
-        <div class="d-flex">
-
-            <a href="{{ route('admin.product.index', ['status' => 'all']) }}"
-               class="btn btn-outline-secondary me-2 {{ $status == 'all' ? 'active' : '' }}">
-                Tất cả ({{ $count['all'] }})
-            </a>
-
-            <a href="{{ route('admin.product.index', ['status' => 'active']) }}"
-               class="btn btn-outline-success me-2 {{ $status == 'active' ? 'active' : '' }}">
-                Đang bán ({{ $count['active'] }})
-            </a>
-
-            <a href="{{ route('admin.product.index', ['status' => 'inactive']) }}"
-               class="btn btn-outline-warning me-2 {{ $status == 'inactive' ? 'active' : '' }}">
-                Chưa bán ({{ $count['inactive'] }})
-            </a>
-
-            <a href="{{ route('admin.product.index', ['status' => 'trash']) }}"
-               class="btn btn-outline-danger {{ $status == 'trash' ? 'active' : '' }}">
-                Thùng rác ({{ $count['trash'] }})
-            </a>
-
-        </div>
-
-        <!-- Search -->
-        <form method="GET" action="{{ route('admin.product.index') }}" class="d-flex">
-            <input type="text" name="keyword" value="{{ $keyword ?? '' }}"
-                   class="form-control" placeholder="Tìm kiếm sản phẩm..." style="width: 230px;">
-            <button class="btn btn-primary ms-2">Tìm</button>
-        </form>
-
     </div>
 
-    <!-- Thông báo -->
+    {{-- ===== FILTER + SEARCH ===== --}}
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body py-3">
+            <div class="row align-items-center g-2">
+
+                {{-- Filter --}}
+                <div class="col-md-8">
+                    <div class="btn-group" role="group">
+                        <a href="{{ route('admin.product.index',['status'=>'all']) }}"
+                           class="btn btn-outline-secondary {{ $status=='all'?'active':'' }}">
+                            Tất cả ({{ $count['all'] }})
+                        </a>
+
+                        <a href="{{ route('admin.product.index',['status'=>'active']) }}"
+                           class="btn btn-outline-success {{ $status=='active'?'active':'' }}">
+                            Đang bán ({{ $count['active'] }})
+                        </a>
+
+                        <a href="{{ route('admin.product.index',['status'=>'inactive']) }}"
+                           class="btn btn-outline-warning {{ $status=='inactive'?'active':'' }}">
+                            Chưa bán ({{ $count['inactive'] }})
+                        </a>
+
+                        <a href="{{ route('admin.product.index',['status'=>'trash']) }}"
+                           class="btn btn-outline-danger {{ $status=='trash'?'active':'' }}">
+                            Thùng rác ({{ $count['trash'] }})
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Search --}}
+                <div class="col-md-4">
+                    <form method="GET" class="d-flex">
+                        <input type="hidden" name="status" value="{{ $status }}">
+                        <input type="text"
+                               name="keyword"
+                               class="form-control"
+                               placeholder="Tìm sản phẩm..."
+                               value="{{ $keyword ?? '' }}">
+                        <button class="btn btn-primary ms-2">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- ===== ALERT ===== --}}
     @if($keyword && $products->total() == 0)
         <div class="alert alert-warning py-2">
             Không tìm thấy kết quả cho từ khóa: <strong>{{ $keyword }}</strong>
         </div>
     @endif
 
-    @if (session('error'))
-        <div class="alert alert-danger py-2">{{ session('error') }}</div>
-    @endif
-
-    @if (session('success'))
+    @if(session('success'))
         <div class="alert alert-success py-2">{{ session('success') }}</div>
     @endif
 
+    @if(session('error'))
+        <div class="alert alert-danger py-2">{{ session('error') }}</div>
+    @endif
 
-    <!-- Bảng sản phẩm -->
-    <div class="card shadow-lg border-0">
+    {{-- ===== TABLE ===== --}}
+    <div class="card shadow-sm">
         <div class="card-body p-0">
 
-            <div class="table-responsive" style="min-height:400px;">
-                <table class="table table-bordered border-secondary table-hover text-center align-middle m-0 fixed-table">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center mb-0">
 
-                    <thead class="text-white" style="background: #4a6fa5;">
+                    <thead class="table-light">
                         <tr>
-                            <th style="width: 18%;">Tên sản phẩm</th>
-                            <th style="width: 20%;">Mô tả</th>
-                            <th style="width: 13%;">Đơn giá</th>
-                            <th style="width: 12%;">Ảnh</th>
-                            <th style="width: 10%;">Trạng thái</th>
-                            <th style="width: 13%;">Ngày Tạo</th>
-                            <th style="width: 17%;">Hành Động</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Mô tả</th>
+                            <th>Giá</th>
+                            <th>Ảnh</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th width="160">Hành động</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @foreach ($products as $product)
+                        @foreach($products as $product)
                         <tr>
 
-                            <td class="truncate">{{ $product->NAME }}</td>
+                            <td class="fw-semibold">
+                                {{ $product->NAME }}
+                            </td>
 
-                            <td class="text-start truncate col-desc">
+                            <td class="text-start text-muted truncate">
                                 {{ $product->DESCRIPTION }}
                             </td>
 
-                            <td class="text-start truncate col-desc">
-                                {{ $product->PRICE }}
+                            <td class="text-end fw-bold">
+                                {{ number_format($product->PRICE) }} đ
                             </td>
 
                             <td>
                                 <img src="{{ asset($product->IMG_URL) }}"
                                      alt="{{ $product->NAME }}"
                                      class="rounded shadow-sm"
-                                     style="width: 80px; height: auto;">
+                                     width="70">
                             </td>
 
                             <td>
-                                @if($product->ACTIVE_FLAG == 1)
-                                    <span class="badge bg-success p-2">
-                                        <i class="bi bi-bag-check fs-5"></i>
-                                    </span>
+                                @if($product->ACTIVE_FLAG)
+                                    <span class="badge bg-success">Đang bán</span>
                                 @else
-                                    <span class="badge bg-secondary p-2">
-                                        <i class="bi bi-bag-x fs-5"></i>
-                                    </span>
+                                    <span class="badge bg-secondary">Chưa bán</span>
                                 @endif
                             </td>
 
@@ -169,20 +147,32 @@
                             </td>
 
                             <td>
-                                <a href="{{ route('admin.product.edit', $product->ID) }}"
-                                   class="btn btn-primary btn-sm me-1">
-                                    Edit
-                                </a>
+                                @if($status !== 'trash')
+                                    <a href="{{ route('admin.product.edit',$product->ID) }}"
+                                       class="btn btn-sm btn-outline-primary">
+                                        Sửa
+                                    </a>
 
-                                <form action="{{ route('admin.product.destroy', $product->ID) }}"
-                                      method="POST" style="display:inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Bạn có chắc muốn xóa?')">
-                                        Delete
-                                    </button>
-                                </form>
+                                    <form action="{{ route('admin.product.destroy',$product->ID) }}"
+                                          method="POST"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Bạn chắc chắn muốn xóa?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            Xóa
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('admin.product.restore',$product->ID) }}"
+                                          method="POST"
+                                          class="d-inline">
+                                        @csrf
+                                        <button class="btn btn-sm btn-outline-success">
+                                            Khôi phục
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
 
                         </tr>
@@ -195,11 +185,10 @@
         </div>
     </div>
 
-    <!-- Phân trang -->
-    <div class="d-flex justify-content-center mt-3">
+    {{-- ===== PAGINATION ===== --}}
+    <div class="d-flex justify-content-center mt-4">
         {{ $products->links('pagination::bootstrap-5') }}
     </div>
 
 </div>
-
 @endsection

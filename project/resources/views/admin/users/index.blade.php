@@ -1,154 +1,181 @@
 @extends('layout/home')
+
 @section('body')
+<div class="row">
+    <div class="col-12">
 
-<div class="container py-3">
-
-    <!-- Thanh chức năng -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="page-title">Quản lý người dùng</h3>
-
-        <!-- Bộ lọc trạng thái -->
-        <div class="d-flex">
-
-            <!-- Tất cả -->
-            <a href="{{ route('admin.user.index', ['status' => 'all']) }}"
-               class="btn btn-outline-primary me-2 {{ $status == 'all' ? 'active' : '' }}">
-                <i class="bi bi-people me-1"></i>
-                Tất cả ({{ $count['all'] }})
-            </a>
-
-            <!-- Đang hoạt động -->
-            <a href="{{ route('admin.user.index', ['status' => 'active']) }}"
-               class="btn btn-outline-success me-2 {{ $status == 'active' ? 'active' : '' }}">
-                <i class="bi bi-person-check me-1"></i>
-                Đang hoạt động ({{ $count['active'] }})
-            </a>
-
-            <!-- Ngưng hoạt động -->
-            <a href="{{ route('admin.user.index', ['status' => 'trash']) }}"
-            class="btn btn-outline-secondary me-2 {{ $status == 'trash' ? 'active' : '' }}">
-                <i class="bi bi-trash3 me-1"></i>
-                Vô hiệu hóa ({{ $count['trash'] }})
-            </a>
-
-        </div>
-
-        <!-- Tìm kiếm -->
-        <form method="GET" action="{{ route('admin.user.index') }}" class="d-flex">
-            <input type="text" name="keyword" value="{{ $keyword ?? '' }}"
-                   class="form-control" placeholder="Tìm kiếm người dùng..." style="width: 220px;">
-            <button class="btn btn-primary ms-2">Tìm</button>
-        </form>
-    </div>
-
-    <!-- Add + Thông báo -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-
-        <a href="{{ route('admin.user.create') }}" class="btn btn-success px-3">
-            <i class="fa fa-plus me-1"></i> Add
-        </a>
-
-        <div style="width: 60%;">
-
-            @if($keyword && $users->total() == 0)
-                <div class="alert alert-warning py-2">
-                    Không tìm thấy kết quả cho từ khóa: <strong>{{ $keyword }}</strong>
+        {{-- Page header --}}
+        <div class="page-header mb-4">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h5 class="mb-0">Quản lý người dùng</h5>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <a href="{{ route('admin.user.create') }}"
+                           class="btn btn-success">
+                            <i class="fa fa-plus me-1"></i> Thêm user
+                        </a>
+                    </div>
                 </div>
-            @endif
-
-            @if (session('success'))
-                <div class="alert alert-success py-2">{{ session('success') }}</div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-danger py-2">{{ session('error') }}</div>
-            @endif
-
+            </div>
         </div>
-    </div>
 
-    <!-- Bảng -->
-    <div class="card shadow-lg border-0">
-        <div class="card-body p-0">
+        {{-- Tabs + Search --}}
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
 
+            {{-- Tabs --}}
+            <ul class="nav nav-pills gap-2">
+                <li class="nav-item">
+                    <a class="nav-link {{ $status == 'all' ? 'active' : '' }}"
+                       href="{{ route('admin.user.index', ['status' => 'all']) }}">
+                        Tất cả ({{ $count['all'] }})
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ $status == 'admin' ? 'active' : '' }}"
+                       href="{{ route('admin.user.index', ['status' => 'admin']) }}">
+                        Admin ({{ $count['admin'] }})
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ $status == 'user' ? 'active' : '' }}"
+                       href="{{ route('admin.user.index', ['status' => 'user']) }}">
+                        User ({{ $count['user'] }})
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ $status == 'trash' ? 'active' : '' }}"
+                       href="{{ route('admin.user.index', ['status' => 'trash']) }}">
+                        Vô hiệu hóa ({{ $count['trash'] }})
+                    </a>
+                </li>
+            </ul>
+
+            {{-- Search --}}
+            <form method="GET"
+                  action="{{ route('admin.user.index') }}"
+                  class="d-flex">
+                <input type="text"
+                       name="keyword"
+                       value="{{ $keyword ?? '' }}"
+                       class="form-control"
+                       placeholder="Tìm user..."
+                       style="width:220px">
+                <button class="btn btn-primary ms-2">Tìm</button>
+            </form>
+        </div>
+
+        {{-- Alert --}}
+        @if (session('success'))
+            <div class="alert alert-success py-2">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger py-2">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if($keyword && $users->total() == 0)
+            <div class="alert alert-warning py-2">
+                Không tìm thấy kết quả cho: <strong>{{ $keyword }}</strong>
+            </div>
+        @endif
+
+        {{-- Card table --}}
+        <div class="card">
             <div class="table-responsive">
-
-                <table class="table table-bordered table-hover text-center align-middle m-0"
-                       style="table-layout: fixed; border: 1px solid #d5d5d5;">
-
-                    <thead class="text-dark" style="background:#e8efff;">
+                <table class="table table-hover align-middle text-center mb-0">
+                    <thead class="table-light">
                         <tr>
-                            <th style="width: 6%;">ID</th>
-                            <th style="width: 20%;">Tên đăng nhập</th>
-                            <th style="width: 30%;">Email</th>
-                            <th style="width: 15%;">Quyền hạn</th>
-                            <th style="width: 15%;">Ngày tạo</th>
-                            <th style="width: 14%;">Hành động</th>
+                            <th>ID</th>
+                            <th>Tên đăng nhập</th>
+                            <th>Email</th>
+                            <th>Quyền</th>
+                            <th>Ngày tạo</th>
+                            <th width="180">Hành động</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @foreach ($users as $user)
+                        @forelse ($users as $user)
                         <tr>
                             <td>{{ $user->ID }}</td>
-
                             <td>{{ $user->USER_NAME }}</td>
-
-                            <td style="word-break: break-all;">{{ $user->EMAIL }}</td>
+                            <td class="text-start">{{ $user->EMAIL }}</td>
 
                             <td>
-                                @if($user->ACTIVE_FLAG == 1)
-                                    <span class="badge bg-success">Quyền Admin</span>
+                                @if($user->role === 'admin')
+                                    <span class="badge bg-danger">Admin</span>
+                                @elseif($user->role === 'superadmin')
+                                    <span class="badge bg-secondary">Superadmin</span>
                                 @else
-                                    <span class="badge bg-secondary">Quyền Thường</span>
+                                    <span class="badge bg-secondary">User</span>
                                 @endif
                             </td>
 
                             <td>
-                                {{ $user->CREATE_DATE 
+                                {{ $user->CREATE_DATE
                                     ? \Carbon\Carbon::parse($user->CREATE_DATE)->format('d/m/Y')
                                     : '-' }}
                             </td>
 
                             <td>
-                                <div class="d-flex justify-content-center gap-2">
+                                <div class="d-flex justify-content-center gap-1">
 
                                     @if ($status !== 'trash')
+                                        <a href="{{ route('admin.user.edit', $user->ID) }}"
+                                           class="btn btn-sm btn-outline-primary">
+                                            Sửa
+                                        </a>
+
                                         <form action="{{ route('admin.user.destroy', $user->ID) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('Bạn có chắc muốn vô hiệu hóa user này?')">
+                                              method="POST"
+                                              onsubmit="return confirm('Vô hiệu hóa user này?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-warning btn-sm">Vô hiệu hóa</button>
+                                            <button class="btn btn-warning btn-sm">
+                                                Vô hiệu hóa
+                                            </button>
                                         </form>
-
                                     @else
                                         <form action="{{ route('admin.user.restore', $user->ID) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('Khôi phục người dùng này?')"
-                                            style="display:inline-block">
+                                              method="POST"
+                                              onsubmit="return confirm('Khôi phục user này?')">
                                             @csrf
-                                            <button class="btn btn-success btn-sm">Khôi phục</button>
+                                            <button class="btn btn-success btn-sm">
+                                                Khôi phục
+                                            </button>
                                         </form>
                                     @endif
 
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-muted py-4">
+                                Không có dữ liệu
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
 
                 </table>
-
             </div>
         </div>
-    </div>
 
-    <!-- Phân trang -->
-    <div class="d-flex justify-content-center mt-3">
-        {{ $users->links('pagination::bootstrap-5') }}
-    </div>
+        {{-- Pagination --}}
+        <div class="d-flex justify-content-center mt-3">
+            {{ $users->links('pagination::bootstrap-5') }}
+        </div>
 
+    </div>
 </div>
-
 @endsection

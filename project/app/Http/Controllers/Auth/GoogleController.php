@@ -40,7 +40,7 @@ class GoogleController extends Controller
 
         Auth::login($user);
 
-        if ($user->role === 'admin') {
+        if ($user->role === 'admin' || $user->role === 'superadmin' ) {
             return redirect()->route('admin.dashboard');
         }
 

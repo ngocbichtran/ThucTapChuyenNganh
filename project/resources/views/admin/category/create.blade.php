@@ -1,61 +1,101 @@
 @extends('layout/home')
 
 @section('body')
+<div class="row">
+    <div class="col-12">
 
-<div class="container">
-
-    <div class="mx-auto" style="max-width: 480px;">
-
-        <form action="{{ route('admin.category.store') }}" 
-              method="POST" 
-              class="p-4 bg-white shadow-lg">
-            @csrf
-
-            <h3 class="text-center mb-4 text-primary fw-bold">Thêm Loại Sản Phẩm</h3>
-
-            @if ($errors->any())
-                <div class="alert alert-danger rounded-3">
-                    <ul class="m-0 ps-3">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+        {{-- Breadcrumb --}}
+        <div class="page-header mb-4">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h5 class="mb-0">Thêm loại sản phẩm</h5>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <ul class="breadcrumb mb-0">
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.category.index') }}">Category</a>
+                            </li>
+                            <li class="breadcrumb-item active">Thêm mới</li>
+                        </ul>
+                    </div>
                 </div>
-            @endif
+            </div>
+        </div>
 
-            <div class="form-group mb-3">
-                <label for="type" class="fw-semibold">Tên loại</label>
-                <input type="text" id="type" name="TYPE" class="form-control rounded-3">
-                @error('TYPE') 
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+        {{-- Card --}}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Thông tin loại sản phẩm</h5>
             </div>
 
-            <div class="form-group mb-3">
-                <label for="desc" class="fw-semibold">Mô tả</label>
-                <textarea id="desc" name="DESCRIPTION" rows="3"
-                          class="form-control rounded-3"></textarea>
-                @error('DESCRIPTION') 
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+            <div class="card-body">
+                <form action="{{ route('admin.category.store') }}" method="POST">
+                    @csrf
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0 ps-3">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                Tên loại <span class="text-danger">*</span>
+                            </label>
+                            <input type="text"
+                                   name="TYPE"
+                                   class="form-control"
+                                   placeholder="Ví dụ: Đồ uống">
+                            @error('TYPE')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                Trạng thái
+                            </label>
+                            <select name="ACTIVE_FLAG" class="form-select">
+                                <option value="1">Đã bày bán</option>
+                                <option value="0">Chưa bày bán</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Mô tả
+                        </label>
+                        <textarea name="DESCRIPTION"
+                                  rows="3"
+                                  class="form-control"
+                                  placeholder="Mô tả ngắn về loại sản phẩm"></textarea>
+                        @error('DESCRIPTION')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                    {{-- Footer --}}
+                    <div class="text-end mt-4">
+                        <a href="{{ route('admin.category.index') }}"
+                           class="btn btn-light me-2">
+                            Quay lại
+                        </a>
+                        <button type="submit"
+                                class="btn btn-primary">
+                            Lưu loại sản phẩm
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <div class="form-group mb-3">
-                <label for="flag" class="fw-semibold">Trạng thái</label>
-                <select id="flag" name="ACTIVE_FLAG" class="form-control rounded-3">
-                    <option value="1">Đã bày bán</option>
-                    <option value="0">Chưa bày bán</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100 py-2 mt-2 rounded-3 fw-semibold">
-                Lưu loại sản phẩm
-            </button>
-
-        </form>
+        </div>
 
     </div>
-
 </div>
-
 @endsection

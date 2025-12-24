@@ -40,10 +40,11 @@ class LoginController extends Controller
 
         protected function authenticated($request, $user)
     {
-        if ($user->role === 'admin') {
+        if ($user->role === 'admin' || $user->role === 'superadmin') {
             return redirect()->route('admin.dashboard');
         }
-
+    // XÓA intended URL
+        $request->session()->forget('url.intended');
         return redirect()->route('shop');
     }
 }

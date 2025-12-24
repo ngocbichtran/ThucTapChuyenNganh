@@ -1,124 +1,184 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Role;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    /* =======================
+        DANH SÁCH USER
+    ======================== */
     public function index(Request $request)
     {
-        $status  = $request->input('status', 'all');  // Set giá trị mặc định
+        $status  = $request->input('status', 'all');
         $keyword = $request->input('keyword');
 
         $query = User::query();
 
-        // Tìm kiếm
+        // 🔍 Tìm kiếm
         if ($keyword) {
             $query->where(function ($q) use ($keyword) {
-                $q->where('USER_NAME', 'LIKE', "%$keyword%")
-                ->orWhere('EMAIL', 'LIKE', "%$keyword%");
+                $q->where('USER_NAME', 'LIKE', "%{$keyword}%")
+                  ->orWhere('EMAIL', 'LIKE', "%{$keyword}%");
             });
         }
 
-        // Lọc trạng thái
-        if ($status === 'trash') {
-            $query->onlyTrashed();
-        }
-        elseif ($status === 'active') {
-            $query->where('ACTIVE_FLAG', 1);
-        }
-        elseif ($status === 'inactive') {
-            $query->where('ACTIVE_FLAG', 0);
+        // 📌 Lọc trạng thái
+        switch ($status) {
+            case 'trash':
+                $query->onlyTrashed();
+                break;
+
+            case 'active':
+                $query->where('ACTIVE_FLAG', 1);
+                break;
+
+            case 'inactive':
+                $query->where('ACTIVE_FLAG', 0);
+                break;
+
+            case 'admin':
+                $query->where('role', 'admin');
+                break;
+
+            case 'user':
+                $query->where('role', 'user');
+                break;
         }
 
         $users = $query->paginate(4)->withQueryString();
 
-        // Đếm số lượng
+        // 📊 Đếm số lượng
         $count = [
             'all'      => User::count(),
             'trash'    => User::onlyTrashed()->count(),
             'active'   => User::where('ACTIVE_FLAG', 1)->count(),
             'inactive' => User::where('ACTIVE_FLAG', 0)->count(),
+            'admin'    => User::where('role', 'admin')->count(),
+            'user'     => User::where('role', 'user')->count(),
         ];
 
-        return view('admin.users.index', compact('users', 'keyword', 'count', 'status'));
+        return view('admin.users.index', compact(
+            'users',
+            'keyword',
+            'count',
+            'status'
+        ));
     }
 
-
+    /* =======================
+        FORM THÊM
+    ======================== */
     public function create()
     {
-        $roles = Role::all();
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create');
     }
 
-    public function store(Request $request)
+    /* =======================
+        LƯU USER
+    ======================== */
+   public function store(Request $request)
     {
-        $user = User::create([
-            'USER_NAME'   => $request->USER_NAME,
-            'PASSWORD'    => $request->PASSWORD,
-            'EMAIL'       => $request->EMAIL,
-            'ROLE_ID'     => $request->ROLE_ID,
-            'ACTIVE_FLAG' => $request->ACTIVE_FLAG,
-            'CREATE_DATE' => now(),
+        $request->validate([
+            'USER_NAME' => 'required|min:3|unique:users,USER_NAME',
+            'EMAIL'     => 'required|email|unique:users,EMAIL',
+            'PASSWORD'  => 'required|min:6|same:PASSWORD_CONFIRM',
+            'role'      => 'required|in:admin,user',
+            'ACTIVE_FLAG' => 'required|in:0,1',
         ]);
 
-        return redirect()->route('admin.user.index')->with(
-            $user ? 'success' : 'error',
-            $user ? 'Thêm user thành công!' : 'Thêm user thất bại!'
-        );
+        User::create([
+            'USER_NAME'   => $request->USER_NAME,
+            'PASSWORD'    => Hash::make($request->PASSWORD),
+            'EMAIL'       => $request->EMAIL,
+            'ACTIVE_FLAG' => $request->ACTIVE_FLAG,
+            'role'        => $request->role,
+            'CREATE_DATE' => now(),
+            'UPDATE_DATE' => now(),
+        ]);
+
+        return redirect()->route('admin.user.index')
+            ->with('success', 'Thêm user thành công!');
     }
 
+
+    /* =======================
+        FORM SỬA
+    ======================== */
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        $roles = Role::all();
 
-        return view('admin.users.edit', compact('user', 'roles'));
+        return view('admin.users.edit', compact('user'));
     }
 
+    /* =======================
+        CẬP NHẬT
+    ======================== */
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
-        $updated = $user->update([
-            'USER_NAME'   => $request->USER_NAME,
-            'PASSWORD'    => $request->PASSWORD,
-            'EMAIL'       => $request->EMAIL,
-            'ROLE_ID'     => $request->ROLE_ID,
-            'ACTIVE_FLAG' => $request->ACTIVE_FLAG,
-            'UPDATE_DATE' => now(),
+        $request->validate([
+            'USER_NAME' => 'required|min:3|unique:users,USER_NAME,' . $user->ID . ',ID',
+            'EMAIL'     => 'required|email|unique:users,EMAIL,' . $user->ID . ',ID',
+            'role'      => 'nullable|in:admin,user',
         ]);
 
-        return redirect()->route('admin.user.index')->with(
-            $updated ? 'success' : 'error',
-            $updated ? 'Cập nhật thành công!' : 'Cập nhật thất bại!'
-        );
+        $data = [
+            'USER_NAME'   => $request->USER_NAME,
+            'EMAIL'       => $request->EMAIL,
+            'UPDATE_DATE' => now(),
+        ];
+
+        if (auth()->id() != $user->ID) {
+            $data['role'] = $request->role;
+        }
+
+        if ($request->filled('PASSWORD')) {
+            $data['PASSWORD'] = Hash::make($request->PASSWORD);
+        }
+
+        $user->update($data);
+
+        return redirect()->route('admin.user.index')
+            ->with('success', 'Cập nhật thành công!');
     }
 
+
+
+    /* =======================
+        XÓA MỀM
+    ======================== */
     public function destroy($id)
     {
         User::where('ID', $id)->delete();
 
-        return redirect()->route('admin.user.index')->with('success', 'Vô hiệu hóa user thành công!');
+        return redirect()->route('admin.user.index')
+            ->with('success', 'Vô hiệu hóa user thành công!');
     }
 
+    /* =======================
+        KHÔI PHỤC
+    ======================== */
     public function restore($id)
     {
-        // Tìm user trong danh sách đã xóa mềm
-        $user = User::onlyTrashed()->where('id', $id)->first();
+        $user = User::onlyTrashed()
+            ->where('ID', $id)
+            ->first();
 
         if (!$user) {
-            return redirect()->back()->with('error', 'Tài khoản không tồn tại hoặc không nằm trong thùng rác.');
+            return redirect()->back()
+                ->with('error', 'Tài khoản không tồn tại hoặc không nằm trong thùng rác.');
         }
 
-        // Khôi phục
         $user->restore();
 
-        return redirect()->back()->with('success', 'Khôi phục tài khoản thành công!');
+        return redirect()->back()
+            ->with('success', 'Khôi phục tài khoản thành công!');
     }
-
 }

@@ -44,26 +44,20 @@
                     <button type="submit" class="btn btn-primary" value="login">Login</button>
                   </div>
                </form>
-            <div class="saprator mt-3">
-              <span>Login with</span>
-            </div>
-            <div class="row">
-              <div class="col-6">
-                <div class="d-grid">
-                  <a href="{{ route('google.login') }}" class="btn mt-2 btn-light-primary bg-light text-muted d-grid">
-                    <img src="{{ asset('assets/images/authentication/google.svg') }}" alt="img">
-                    <span class="d-none d-sm-inline-block"> Google</span>
-                </a>
-                </div>
-              </div>
-              <!-- <div class="col-6">
-                <div class="d-grid">
-                  <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="../assets/images/authentication/facebook.svg" alt="img"> <span class="d-none d-sm-inline-block"> Facebook</span>
-                  </button>
-                </div>
-              </div> -->
-            </div>
+       <!-- Divider -->
+                    <div class="text-center my-4 position-relative">
+                        <span class="bg-white px-3 text-muted small">OR</span>
+                        <hr class="position-absolute w-100 top-50 start-0">
+                    </div>
+
+                    <!-- Google Login -->
+                    <div class="d-grid">
+                        <a href="{{ route('google.login') }}"
+                           class="btn btn-light border d-flex align-items-center justify-content-center gap-2">
+                            <img src="{{ asset('assets/images/authentication/google.svg') }}" width="18">
+                            <span>Login with Google</span>
+                        </a>
+                    </div>
           </div>
         </div>
        

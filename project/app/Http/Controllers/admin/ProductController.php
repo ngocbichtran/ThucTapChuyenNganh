@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Models\Category;
-use App\Models\Product;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Product;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -15,20 +15,19 @@ class ProductController extends Controller
         $status  = $request->input('status');
         $keyword = $request->input('keyword');
 
-        // Bắt đầu query
+        // Query gốc
         $query = Product::query();
 
-        // Lọc trạng thái
+        // Lọc theo trạng thái
         if ($status === 'trash') {
-            $query->onlyTrashed();
+            $query = Product::onlyTrashed();
         } else {
-            $query->withoutTrashed();
+            $query = Product::withoutTrashed();
 
-            // Tìm kiếm
             if ($keyword) {
                 $query->where(function ($q) use ($keyword) {
-                    $q->where('NAME', 'LIKE', '%' . $keyword . '%')
-                      ->orWhere('DESCRIPTION', 'LIKE', '%' . $keyword . '%');
+                    $q->where('NAME', 'LIKE', "%$keyword%")
+                      ->orWhere('DESCRIPTION', 'LIKE', "%$keyword%");
                 });
             }
         }
@@ -36,15 +35,20 @@ class ProductController extends Controller
         // Phân trang
         $products = $query->paginate(4)->withQueryString();
 
-        // Đếm trạng thái
-       $count = [
-            'all'   => Product::count(),
-            'trash' => Product::onlyTrashed()->count(),
-            'active'   => Product::where('ACTIVE_FLAG', 1)->count(),
-            'inactive' => Product::where('ACTIVE_FLAG', 0)->count(),
+        // Đếm
+        $count = [
+            'all'      => Product::count(),
+            'active'   => Product::withoutTrashed()->where('ACTIVE_FLAG', 1)->count(),
+            'inactive'   => Product::withoutTrashed()->where('ACTIVE_FLAG', 0)->count(),
+            'trash'    => Product::onlyTrashed()->count(),
         ];
 
-        return view('admin.product.index', compact('products', 'keyword', 'count', 'status'));
+        return view('admin.product.index', compact(
+            'products',
+            'keyword',
+            'count',
+            'status'
+        ));
     }
 
     // CREATE
@@ -58,78 +62,86 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'CATE_ID'      => 'required|exists:category,ID',
-            'NAME'         => 'required|min:3|max:100',
-            'DESCRIPTION'  => 'nullable|max:500',
-            'PRICE'=>'required',
-            'IMG_URL' => 'required',
-            'ACTIVE_FLAG'  => 'required|in:0,1',
-        ], [
-            'CATE_ID.required' => 'Vui lòng chọn loại sản phẩm.',
-            'CATE_ID.exists'   => 'Loại sản phẩm không hợp lệ.',
-            'NAME.required'    => 'Tên sản phẩm không được để trống.',
-            'NAME.min'         => 'Tên phải có ít nhất 3 ký tự.',
-            'PRICE.required'=>'Vui lòng nhập giá.',
-            'IMG_URL.required'  => 'Vui lòng cung cấp URL hình ảnh.',
-            'ACTIVE_FLAG.in'   => 'Trạng thái không hợp lệ.',
+            'CATE_ID'     => 'required|integer|exists:category,ID',
+            'NAME'        => 'required|string|max:190',
+            'DESCRIPTION' => 'nullable|string',
+            'PRICE'       => 'required|integer',
+            'IMG_URL'     => 'nullable|string|max:200',
+            'ACTIVE_FLAG' => 'required|integer|in:0,1',
         ]);
 
-        // INSERT
-        $product = Product::create([
-            'CATE_ID'      => $request->CATE_ID,
-            'NAME'         => $request->NAME,
-            'DESCRIPTION'  => $request->DESCRIPTION,
-            'PRICE'=> $request->PRICE,
-            'IMG_URL'      => $request->IMG_URL,
-            'ACTIVE_FLAG'  => $request->ACTIVE_FLAG,
-            'CREATE_DATE'  => now(),
+        Product::create([
+            'CATE_ID'     => $request->CATE_ID,
+            'NAME'        => $request->NAME,
+            'DESCRIPTION' => $request->DESCRIPTION,
+            'PRICE'       => $request->PRICE,
+            'IMG_URL'     => $request->IMG_URL,
+            'ACTIVE_FLAG' => $request->ACTIVE_FLAG,
+            'CREATE_DATE' => now(),
         ]);
 
-        if($product){
-            return redirect()->route('admin.product.index')
-                ->with('success', 'Thêm sản phẩm thành công!');
-        }
-
-        return back()->with('error', 'Thêm sản phẩm thất bại!');
+        return redirect()->route('admin.product.index')
+            ->with('success', 'Thêm sản phẩm thành công!');
     }
 
     // EDIT
-    public function edit(string $id)
+    public function edit($id)
     {
-        $product = Product::findOrFail($id);
+        $product    = Product::findOrFail($id);
         $categories = Category::all();
-        return view('admin.product.edit', compact('product','categories'));
+
+        return view('admin.product.edit', compact('product', 'categories'));
     }
 
     // UPDATE
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
 
-        $updated = $product->update([
-            'CATE_ID'      => $request->CATE_ID,
-            'NAME'         => $request->NAME,
-            'DESCRIPTION'  => $request->DESCRIPTION,
-            'PRICE'=> $request->PRICE,
-            'IMG_URL'      => $request->IMG_URL,
-            'ACTIVE_FLAG'  => $request->ACTIVE_FLAG,
-            'UPDATE_DATE'  => now(),
+        $request->validate([
+            'CATE_ID'     => 'required|integer|exists:category,ID',
+            'NAME'        => 'required|string|max:190',
+            'DESCRIPTION' => 'nullable|string',
+            'PRICE'       => 'required|integer',
+            'IMG_URL'     => 'nullable|string|max:200',
+            'ACTIVE_FLAG' => 'required|integer|in:0,1',
         ]);
 
-        if($updated){
-            return redirect()->route('admin.product.index')
-                ->with('success', 'Cập nhật thành công!');
-        }
-
-        return back()->with('error', 'Cập nhật thất bại!');
-    }
-
-    // DELETE
-    public function destroy(string $id)
-    {
-        Product::where('ID', $id)->delete();
+        $product->update([
+            'CATE_ID'     => $request->CATE_ID,
+            'NAME'        => $request->NAME,
+            'DESCRIPTION' => $request->DESCRIPTION,
+            'PRICE'       => $request->PRICE,
+            'IMG_URL'     => $request->IMG_URL,
+            'ACTIVE_FLAG' => $request->ACTIVE_FLAG,
+            'UPDATE_DATE' => now(),
+        ]);
 
         return redirect()->route('admin.product.index')
-            ->with('success', 'Xóa sản phẩm thành công!');
+            ->with('success', 'Cập nhật sản phẩm thành công!');
+    }
+
+    // SOFT DELETE
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return redirect()->route('admin.product.index')
+            ->with('success', 'Đã chuyển sản phẩm vào thùng rác!');
+    }
+
+    // RESTORE
+    public function restore($id)
+    {
+        $product = Product::onlyTrashed()->find($id);
+
+        if (!$product) {
+            return back()->with('error', 'Sản phẩm không tồn tại!');
+        }
+
+        $product->restore();
+
+        return back()->with('success', 'Khôi phục sản phẩm thành công!');
     }
 }

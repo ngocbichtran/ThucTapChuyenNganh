@@ -1,56 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="vi">
 <head>
-    <title>CapyKho</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>@yield('title','Admin')</title>
 
-    <!-- Favicon -->
-    <link rel="icon" href="{{ asset('assetShop/images/icons/CabyShopTrang.png') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap">
-
-    <!-- Icons -->
-    <link rel="stylesheet" href="{{ asset('assets/fonts/tabler-icons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/fonts/feather.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/fonts/fontawesome.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/fonts/material.css') }}">
-
-    <!-- Template CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link">
-    <link rel="stylesheet" href="{{ asset('assets/css/style-preset.css') }}">
+    @stack('css')
 </head>
+<body class="bg-light">
 
-<body data-pc-preset="preset-1" data-pc-direction="ltr" data-pc-theme="light">
+{{-- TOPBAR --}}
+<nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm px-4">
+    <a class="navbar-brand fw-bold" href="{{ route('admin.dashboard') }}">CAPYKHO</a>
 
-    <!-- Loader -->
-    <div class="loader-bg">
-        <div class="loader-track">
-            <div class="loader-fill"></div>
+    <div class="ms-auto d-flex gap-2">
+        <a href="{{ route('admin.category.index') }}" class="btn btn-sm btn-outline-primary">Category</a>
+        <a href="{{ route('admin.product.index') }}" class="btn btn-sm btn-outline-primary">Sản phẩm</a>
+        <a href="{{ route('admin.tonkho.index') }}" class="btn btn-sm btn-outline-primary">Tồn kho</a>
+
+        <div class="dropdown">
+            <a class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                {{ auth()->user()->USER_NAME }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button class="dropdown-item">Logout</button>
+                    </form>
+                </li>
+            </ul>
         </div>
     </div>
+</nav>
 
-    
-    <!-- ==================== CONTENT ==================== -->
-    @include('layout.partials.sidebar') @include('layout.partials.header') 
-    <div class="pc-container">
-        <div class="pc-content">
-            @yield('body')
-        </div>
-    </div>
-    
-    <!-- ==================== JS ==================== -->
-    <script src="{{ asset('assets/js/plugins/popper.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins/simplebar.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugins/feather.min.js') }}"></script>
-    <script src="{{ asset('assets/js/pcoded.js') }}"></script>
+{{-- CONTENT --}}
+<main class="container-fluid px-4 py-4">
+    @yield('body')
+</main>
 
-    <script>
-        feather.replace();
-    </script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+@stack('js')
 </body>
 </html>

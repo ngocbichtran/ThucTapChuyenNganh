@@ -18,12 +18,16 @@ class User extends Authenticatable
         'USER_NAME',
         'PASSWORD',
         'EMAIL',
-        'NAME',
         'ACTIVE_FLAG',
         'CREATE_DATE',
         'UPDATE_DATE',
         'google_id',
         'role',
+    ];
+
+    //Ẩn mật khẩu cho an toàn
+    protected $hidden = [
+        'PASSWORD',
     ];
 
     // Lấy đúng cột mật khẩu từ DB
@@ -32,13 +36,4 @@ class User extends Authenticatable
         return $this->PASSWORD;
     }
 
-     // Liên kết với Role (FK ROLE_ID)
-    public function user()
-    {
-        return $this->belongsTo(Role::class, 'ROLE_ID', 'ID');
-    }
-        protected $casts = [
-        'CREATE_DATE' => 'datetime',
-        'UPDATE_DATE' => 'datetime',
-    ];
 }

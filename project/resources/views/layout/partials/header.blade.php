@@ -1,53 +1,35 @@
-    <!-- ==================== HEADER ==================== -->
-    <header class="pc-header">
-        <div class="header-wrapper">
+<header class="pc-header">
+    <div class="header-wrapper d-flex justify-content-between align-items-center">
 
-            <!-- Mobile -->
-            <div class="me-auto pc-mob-drp">
-                <ul class="list-unstyled">
-                    <li class="pc-h-item pc-sidebar-collapse">
-                        <a href="#" class="pc-head-link ms-0" id="sidebar-hide"><i class="ti ti-menu-2"></i></a>
-                    </li>
-                    <li class="pc-h-item pc-sidebar-popup">
-                        <a href="#" class="pc-head-link ms-0" id="mobile-collapse"><i class="ti ti-menu-2"></i></a>
-                    </li>
-                </ul>
-            </div>
+        <!-- LOGO -->
+        <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-2">
+            <img src="{{ asset('assets/images/CabyKhoĐen.png') }}" style="width:45px">
+            <strong>CAPYKHO</strong>
+        </a>
 
-            <!-- User -->
-            <div>
-                <ul class="list-unstyled">
-                    <li class="dropdown pc-h-item header-user-profile">
-                        <a class="pc-head-link dropdown-toggle" data-bs-toggle="dropdown" href="#">
-                            <img src="{{ asset('assets/images/user/avatar-2.jpg') }}" class="user-avtar">
-                            <span>Ngọc Bích Cute</span>
-                        </a>
-
-                        <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
-
-                            <div class="dropdown-header">
-                                <div class="d-flex mb-1">
-                                    <img src="{{ asset('assets/images/user/avatar-2.jpg') }}" class="user-avtar wid-35">
-                                    <div class="ms-3">
-                                        <h6 class="mb-1">Stebin Ben</h6>
-                                        <span>UI/UX Designer</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Logout -->
-                            <a class="dropdown-item" href="#"
-                               onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                <i class="ti ti-logout"></i> Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
+        <!-- NAV -->
+        <div class="d-flex gap-3">
+            <a href="{{ route('admin.category.index') }}" class="btn btn-light">Category</a>
+            <a href="{{ route('admin.product.index') }}" class="btn btn-light">Sản phẩm</a>
+            <a href="{{ route('admin.tonkho.index') }}" class="btn btn-light">Tồn kho</a>
+            <a href="{{ route('admin.user.index') }}" class="btn btn-light">User</a>
         </div>
-    </header>
+
+        <!-- USER -->
+        <div class="dropdown">
+            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                {{ auth()->user()->USER_NAME ?? 'Admin' }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item"
+                       href="#"
+                       onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</header>
