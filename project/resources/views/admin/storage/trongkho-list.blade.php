@@ -5,88 +5,73 @@
 @section('body')
 <div class="container-fluid">
 
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="mb-0">📦 Quản lý tồn kho</h4>
-    </div>
-
-    <!-- Bộ lọc -->
-    <div class="card mb-4 shadow-sm">
-        <div class="card-body">
-            <form method="GET" class="row g-3">
-                <div class="col-md-4">
-                    <input type="text"
-                           name="keyword"
-                           value="{{ request('keyword') }}"
-                           class="form-control"
-                           placeholder="🔍 Tìm tên sản phẩm...">
+    <div class="page-header mb-4">
+        <div class="page-block">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h5 class="mb-0">Quản lý tồn kho</h5>
                 </div>
-
-                <div class="col-md-3">
-                    <select name="stock" class="form-select">
-                        <option value="">-- Tình trạng kho --</option>
-                        <option value="low" {{ request('stock')=='low' ? 'selected' : '' }}>
-                            Sắp hết hàng
-                        </option>
-                        <option value="out" {{ request('stock')=='out' ? 'selected' : '' }}>
-                            Hết hàng
-                        </option>
-                    </select>
-                </div>
-
-                <div class="col-md-2">
-                    <button class="btn btn-primary w-100">
-                        Lọc
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
-    <!-- Bảng tồn kho -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-white">
-            <strong>📋 Danh sách tồn kho</strong>
-        </div>
-
+    <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body p-0">
-            <table class="table table-bordered table-hover mb-0">
+
+            <table class="table align-middle table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>#</th>
+                        <th width="60">STT</th>
                         <th>Sản phẩm</th>
-                        <th>Giá bán</th>
-                        <th>Tồn kho</th>
-                        <th>Trạng thái</th>
+                        <th width="160">Giá bán</th>
+                        <th width="120" class="text-center">Tồn kho</th>
+                        <th width="140" class="text-center">Trạng thái</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     @forelse($products as $index => $product)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $product->NAME }}</td>
-                            <td>{{ number_format($product->PRICE, 0, ',', '.') }} đ</td>
-                            <td class="text-center">{{ $product->STOCK }}</td>
+                            <td class="text-muted">{{ $index + 1 }}</td>
+
+                            <td class="fw-semibold">
+                                {{ $product->NAME }}
+                            </td>
+
+                            <td class="fw-semibold text-danger">
+                                {{ number_format($product->PRICE, 0, ',', '.') }} đ
+                            </td>
+
+                            <td class="text-center fw-bold">
+                                {{ $product->STOCK }}
+                            </td>
+
                             <td class="text-center">
                                 @if($product->STOCK == 0)
-                                    <span class="badge bg-danger">Hết hàng</span>
+                                    <span class="badge bg-danger rounded-pill px-3 py-2">
+                                        Hết hàng
+                                    </span>
                                 @elseif($product->STOCK < 5)
-                                    <span class="badge bg-warning text-dark">Sắp hết</span>
+                                    <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                                        Sắp hết
+                                    </span>
                                 @else
-                                    <span class="badge bg-success">Còn hàng</span>
+                                    <span class="badge bg-success rounded-pill px-3 py-2">
+                                        Còn hàng
+                                    </span>
                                 @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted">
+                            <td colspan="5" class="text-center py-5 text-muted">
                                 Không có dữ liệu tồn kho
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
+
         </div>
     </div>
 

@@ -40,7 +40,7 @@ class ShopController extends Controller
         } elseif ($sort == 'price_desc') {
             $query->orderBy('PRICE', 'desc');
         } else {
-            $query->orderBy('ID', 'desc'); // mặc định: mới nhất
+            $query->orderBy('ID', 'desc');
         }
 
         // Phân trang

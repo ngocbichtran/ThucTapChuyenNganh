@@ -9,9 +9,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /* =======================
-        DANH SÁCH USER
-    ======================== */
+
+    //DANH SÁCH USER
     public function index(Request $request)
     {
         $status  = $request->input('status', 'all');
@@ -19,7 +18,7 @@ class UserController extends Controller
 
         $query = User::query();
 
-        // 🔍 Tìm kiếm
+        //Tìm kiếm
         if ($keyword) {
             $query->where(function ($q) use ($keyword) {
                 $q->where('USER_NAME', 'LIKE', "%{$keyword}%")
@@ -27,7 +26,7 @@ class UserController extends Controller
             });
         }
 
-        // 📌 Lọc trạng thái
+        //Lọc trạng thái
         switch ($status) {
             case 'trash':
                 $query->onlyTrashed();
@@ -50,9 +49,11 @@ class UserController extends Controller
                 break;
         }
 
-        $users = $query->paginate(4)->withQueryString();
+        $users = $query
+            ->paginate(4)
+            ->withQueryString();
 
-        // 📊 Đếm số lượng
+        //Đếm số lượng
         $count = [
             'all'      => User::count(),
             'trash'    => User::onlyTrashed()->count(),
@@ -62,32 +63,26 @@ class UserController extends Controller
             'user'     => User::where('role', 'user')->count(),
         ];
 
-        return view('admin.users.index', compact(
-            'users',
-            'keyword',
-            'count',
-            'status'
-        ));
+        return view(
+            'admin.users.index',
+            compact('users', 'keyword', 'count', 'status')
+        );
     }
 
-    /* =======================
-        FORM THÊM
-    ======================== */
+    //FORM THÊM
     public function create()
     {
         return view('admin.users.create');
     }
 
-    /* =======================
-        LƯU USER
-    ======================== */
-   public function store(Request $request)
+    //LƯU USER
+    public function store(Request $request)
     {
         $request->validate([
-            'USER_NAME' => 'required|min:3|unique:users,USER_NAME',
-            'EMAIL'     => 'required|email|unique:users,EMAIL',
-            'PASSWORD'  => 'required|min:6|same:PASSWORD_CONFIRM',
-            'role'      => 'required|in:admin,user',
+            'USER_NAME'   => 'required|min:3|unique:users,USER_NAME',
+            'EMAIL'       => 'required|email|unique:users,EMAIL',
+            'PASSWORD'    => 'required|min:6|same:PASSWORD_CONFIRM',
+            'role'        => 'required|in:admin,user',
             'ACTIVE_FLAG' => 'required|in:0,1',
         ]);
 
@@ -101,14 +96,12 @@ class UserController extends Controller
             'UPDATE_DATE' => now(),
         ]);
 
-        return redirect()->route('admin.user.index')
+        return redirect()
+            ->route('admin.user.index')
             ->with('success', 'Thêm user thành công!');
     }
 
-
-    /* =======================
-        FORM SỬA
-    ======================== */
+    //FORM SỬA
     public function edit($id)
     {
         $user = User::findOrFail($id);
@@ -116,9 +109,7 @@ class UserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
-    /* =======================
-        CẬP NHẬT
-    ======================== */
+    //CẬP NHẬT
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -145,15 +136,12 @@ class UserController extends Controller
 
         $user->update($data);
 
-        return redirect()->route('admin.user.index')
+        return redirect()
+            ->route('admin.user.index')
             ->with('success', 'Cập nhật thành công!');
     }
 
-
-
-    /* =======================
-        XÓA MỀM
-    ======================== */
+    //XÓA MỀM
     public function destroy($id)
     {
         $user = User::findOrFail($id);
@@ -178,14 +166,12 @@ class UserController extends Controller
 
         $user->delete();
 
-        return redirect()->route('admin.user.index')
+        return redirect()
+            ->route('admin.user.index')
             ->with('success', 'Vô hiệu hóa user thành công!');
     }
 
-
-    /* =======================
-        KHÔI PHỤC
-    ======================== */
+        // KHÔI PHỤC
     public function restore($id)
     {
         $user = User::onlyTrashed()

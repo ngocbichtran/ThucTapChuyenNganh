@@ -12,7 +12,7 @@ class ProductController extends Controller
     // LIST
     public function index(Request $request)
     {
-        $status = $request->input('status', 'all');
+        $status  = $request->input('status', 'all');
         $keyword = $request->input('keyword');
 
         $query = Product::query();
@@ -33,37 +33,35 @@ class ProductController extends Controller
             if ($keyword) {
                 $query->where(function ($q) use ($keyword) {
                     $q->where('NAME', 'LIKE', "%$keyword%")
-                    ->orWhere('DESCRIPTION', 'LIKE', "%$keyword%");
+                      ->orWhere('DESCRIPTION', 'LIKE', "%$keyword%");
                 });
             }
         }
 
-
-
         // Phân trang
-        $products = $query->paginate(4)->withQueryString();
+        $products = $query
+            ->paginate(4)
+            ->withQueryString();
 
         // Đếm
         $count = [
-            'all' => Product::withoutTrashed()->count(),
+            'all'      => Product::withoutTrashed()->count(),
             'active'   => Product::withoutTrashed()->where('ACTIVE_FLAG', 1)->count(),
             'inactive' => Product::withoutTrashed()->where('ACTIVE_FLAG', 0)->count(),
             'trash'    => Product::onlyTrashed()->count(),
         ];
 
-
-        return view('admin.product.index', compact(
-            'products',
-            'keyword',
-            'count',
-            'status'
-        ));
+        return view(
+            'admin.product.index',
+            compact('products', 'keyword', 'count', 'status')
+        );
     }
 
     // CREATE
     public function create()
     {
         $categoryList = Category::all();
+
         return view('admin.product.create', compact('categoryList'));
     }
 
@@ -89,7 +87,8 @@ class ProductController extends Controller
             'CREATE_DATE' => now(),
         ]);
 
-        return redirect()->route('admin.product.index')
+        return redirect()
+            ->route('admin.product.index')
             ->with('success', 'Thêm sản phẩm thành công!');
     }
 
@@ -126,7 +125,8 @@ class ProductController extends Controller
             'UPDATE_DATE' => now(),
         ]);
 
-        return redirect()->route('admin.product.index')
+        return redirect()
+            ->route('admin.product.index')
             ->with('success', 'Cập nhật sản phẩm thành công!');
     }
 
@@ -136,7 +136,8 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
 
-        return redirect()->route('admin.product.index')
+        return redirect()
+            ->route('admin.product.index')
             ->with('success', 'Đã chuyển sản phẩm vào thùng rác!');
     }
 

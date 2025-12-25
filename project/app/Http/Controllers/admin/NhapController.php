@@ -20,6 +20,7 @@ class NhapController extends Controller
     public function index()
     {
         $receipts = ImportReceipt::orderBy('created_at', 'desc')->get();
+
         return view('admin.storage.nhapkho-list', compact('receipts'));
     }
 
@@ -29,6 +30,7 @@ class NhapController extends Controller
     public function create()
     {
         $products = Product::where('ACTIVE_FLAG', 1)->get();
+
         return view('admin.storage.nhapkho-create', compact('products'));
     }
 
@@ -38,8 +40,8 @@ class NhapController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'supplier' => 'required|string|max:255',
-            'products' => 'required|array|min:1',
+            'supplier'              => 'required|string|max:255',
+            'products'              => 'required|array|min:1',
             'products.*.product_id' => 'required|exists:product_info,ID',
             'products.*.quantity'   => 'required|integer|min:1',
             'products.*.price'      => 'required|numeric|min:0',
@@ -47,17 +49,17 @@ class NhapController extends Controller
 
         DB::transaction(function () use ($request) {
 
-            // 1️⃣ Tạo phiếu nhập
+            //Tạo phiếu nhập
             $receipt = ImportReceipt::create([
                 'receiptCode' => Str::upper(Str::random(8)),
                 'createdBy'   => Auth::id(),
                 'supplier'    => $request->supplier,
                 'note'        => $request->note,
                 'status'      => 'pending',
-                'totals'       => 0,
+                'totals'      => 0,
             ]);
 
-            // 2️⃣ Lưu chi tiết + tính tổng tiền
+            //Lưu chi tiết + tính tổng tiền
             $total = 0;
 
             foreach ($request->products as $item) {
@@ -71,13 +73,14 @@ class NhapController extends Controller
                 $total += $item['quantity'] * $item['price'];
             }
 
-            // 3️⃣ Cập nhật tổng tiền
+            //Cập nhật tổng tiền
             $receipt->update([
-                'totals' => $total
+                'totals' => $total,
             ]);
         });
 
-        return redirect()->route('admin.nhap.index')
+        return redirect()
+            ->route('admin.nhap.index')
             ->with('success', 'Tạo phiếu nhập kho thành công');
     }
 
@@ -89,7 +92,7 @@ class NhapController extends Controller
         $nhap->load('details.product');
 
         return view('admin.storage.nhapkho-details', [
-            'receipt' => $nhap
+            'receipt' => $nhap,
         ]);
     }
 
@@ -111,8 +114,8 @@ class NhapController extends Controller
                 $inventory = Inventory::firstOrCreate(
                     ['product_id' => $detail->product_id],
                     [
-                        'quantity' => 0,
-                        'initial_quantity' => 0
+                        'quantity'         => 0,
+                        'initial_quantity' => 0,
                     ]
                 );
 
@@ -122,11 +125,12 @@ class NhapController extends Controller
             }
 
             $receipt->update([
-                'status' => 'completed'
+                'status' => 'completed',
             ]);
         });
 
-        return redirect()->back()
+        return redirect()
+            ->back()
             ->with('success', 'Duyệt phiếu nhập kho thành công');
     }
 

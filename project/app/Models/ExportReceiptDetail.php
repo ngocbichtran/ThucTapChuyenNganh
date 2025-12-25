@@ -16,8 +16,6 @@ class ExportReceiptDetail extends Model
         'price',
     ];
 
-    /* ================= RELATIONSHIPS ================= */
-
     // Phiếu xuất
     public function receipt()
     {

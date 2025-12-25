@@ -19,8 +19,6 @@ class ExportReceipt extends Model
         'totals',
     ];
 
-    /* ================= RELATIONSHIPS ================= */
-
     // Chi tiết phiếu xuất
     public function details()
     {

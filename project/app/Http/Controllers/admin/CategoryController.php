@@ -8,55 +8,52 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    // ================= LIST =================
-   public function index(Request $request)
-{
-    $status  = $request->input('status');
-    $keyword = $request->input('keyword');
+    //LIST
+    public function index(Request $request)
+    {
+        $status  = $request->input('status');
+        $keyword = $request->input('keyword');
 
-    // Query gốc
-    $query = Category::query();
+        // Query gốc
+        $query = Category::query();
 
-    // Lọc thùng rác
-    if ($status === 'trash') {
-        $query->onlyTrashed();
+        // Lọc thùng rác
+        if ($status === 'trash') {
+            $query->onlyTrashed();
+        }
+
+        // Tìm kiếm
+        if ($keyword) {
+            $query->where('TYPE', 'LIKE', "%{$keyword}%");
+        }
+
+        // Phân trang
+        $categories = $query
+            ->orderBy('ID', 'DESC')
+            ->paginate(5)
+            ->withQueryString();
+
+        // Đếm trạng thái
+        $count = [
+            'all'      => Category::withTrashed()->count(),
+            'active'   => Category::where('ACTIVE_FLAG', 1)->count(),
+            'inactive' => Category::where('ACTIVE_FLAG', 0)->count(),
+            'trash'    => Category::onlyTrashed()->count(),
+        ];
+
+        return view(
+            'admin.category.index',
+            compact('categories', 'keyword', 'count', 'status')
+        );
     }
 
-    // Tìm kiếm
-    if ($keyword) {
-        $query->where('TYPE', 'LIKE', "%{$keyword}%");
-    }
-
-    // Phân trang
-    $categories = $query
-        ->orderBy('ID', 'DESC')
-        ->paginate(5)
-        ->withQueryString();
-
-    // Đếm trạng thái
-    $count = [
-        'all'      => Category::withTrashed()->count(),
-        'active'   => Category::where('ACTIVE_FLAG', 1)->count(),
-        'inactive' => Category::where('ACTIVE_FLAG', 0)->count(),
-        'trash'    => Category::onlyTrashed()->count(),
-    ];
-
-    return view('admin.category.index', compact(
-        'categories',
-        'keyword',
-        'count',
-        'status'
-    ));
-}
-
-
-    // ================= CREATE =================
+    //CREATE
     public function create()
     {
         return view('admin.category.create');
     }
 
-    // ================= STORE =================
+    //STORE
     public function store(Request $request)
     {
         $request->validate([
@@ -77,14 +74,15 @@ class CategoryController extends Controller
             ->with('success', 'Thêm category thành công!');
     }
 
-    // ================= EDIT =================
+    //EDIT
     public function edit(string $id)
     {
         $category = Category::findOrFail($id);
+
         return view('admin.category.edit', compact('category'));
     }
 
-    // ================= UPDATE =================
+    //UPDATE
     public function update(Request $request, string $id)
     {
         $category = Category::findOrFail($id);
@@ -107,7 +105,7 @@ class CategoryController extends Controller
             ->with('success', 'Cập nhật category thành công!');
     }
 
-    // ================= DELETE (SOFT) =================
+    //DELETE (SOFT)
     public function destroy(string $id)
     {
         try {
@@ -124,7 +122,7 @@ class CategoryController extends Controller
         }
     }
 
-    // ================= RESTORE =================
+    //RESTORE
     public function restore(string $id)
     {
         $category = Category::onlyTrashed()->findOrFail($id);

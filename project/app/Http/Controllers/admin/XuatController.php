@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Exception;
+
 class XuatController extends Controller
 {
     /**
@@ -20,6 +21,7 @@ class XuatController extends Controller
     public function index()
     {
         $receipts = ExportReceipt::orderBy('created_at', 'desc')->get();
+
         return view('admin.storage.xuatkho-list', compact('receipts'));
     }
 
@@ -29,6 +31,7 @@ class XuatController extends Controller
     public function create()
     {
         $products = Product::where('ACTIVE_FLAG', 1)->get();
+
         return view('admin.storage.xuatkho-create', compact('products'));
     }
 
@@ -38,8 +41,8 @@ class XuatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'customer' => 'required|string|max:255',
-            'products' => 'required|array|min:1',
+            'customer'              => 'required|string|max:255',
+            'products'              => 'required|array|min:1',
             'products.*.product_id' => 'required|exists:product_info,ID',
             'products.*.quantity'   => 'required|integer|min:1',
             'products.*.price'      => 'required|numeric|min:0',
@@ -47,7 +50,7 @@ class XuatController extends Controller
 
         DB::transaction(function () use ($request) {
 
-            // 1️⃣ Tạo phiếu xuất
+            //Tạo phiếu xuất
             $receipt = ExportReceipt::create([
                 'receiptCode' => 'PX' . strtoupper(Str::random(8)),
                 'createdBy'   => Auth::id(),
@@ -57,7 +60,7 @@ class XuatController extends Controller
                 'totals'      => 0,
             ]);
 
-            // 2️⃣ Lưu chi tiết + tính tổng
+            //Lưu chi tiết + tính tổng
             $total = 0;
 
             foreach ($request->products as $item) {
@@ -71,13 +74,14 @@ class XuatController extends Controller
                 $total += $item['quantity'] * $item['price'];
             }
 
-            // 3️⃣ Update tổng tiền
+            //Update tổng tiền
             $receipt->update([
-                'totals' => $total
+                'totals' => $total,
             ]);
         });
 
-        return redirect()->route('admin.xuat.index')
+        return redirect()
+            ->route('admin.xuat.index')
             ->with('success', 'Tạo phiếu xuất kho thành công');
     }
 
@@ -89,7 +93,7 @@ class XuatController extends Controller
         $xuat->load('details.product');
 
         return view('admin.storage.xuatkho-details', [
-            'receipt' => $xuat
+            'receipt' => $xuat,
         ]);
     }
 
@@ -106,16 +110,18 @@ class XuatController extends Controller
                 abort(403, 'Phiếu xuất đã được xử lý');
             }
 
-            // 🔴 Kiểm tra tồn kho trước khi trừ
+            //Kiểm tra tồn kho trước khi trừ
             foreach ($receipt->details as $detail) {
                 $inventory = Inventory::where('product_id', $detail->product_id)->first();
 
                 if (!$inventory || $inventory->quantity < $detail->quantity) {
-                    throw new Exception('Không đủ tồn kho cho sản phẩm: ' . $detail->product_id);
+                    throw new Exception(
+                        'Không đủ tồn kho cho sản phẩm: ' . $detail->product_id
+                    );
                 }
             }
 
-            // ✅ Trừ kho
+            //Trừ kho
             foreach ($receipt->details as $detail) {
                 $inventory = Inventory::where('product_id', $detail->product_id)->first();
                 $inventory->quantity -= $detail->quantity;
@@ -124,11 +130,12 @@ class XuatController extends Controller
 
             // Cập nhật trạng thái
             $receipt->update([
-                'status' => 'completed'
+                'status' => 'completed',
             ]);
         });
 
-        return redirect()->back()
+        return redirect()
+            ->back()
             ->with('success', 'Duyệt phiếu xuất kho thành công');
     }
 

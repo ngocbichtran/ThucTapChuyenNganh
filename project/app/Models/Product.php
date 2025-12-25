@@ -28,13 +28,13 @@ class Product extends Model
         'UPDATE_DATE' => 'datetime',
     ];
 
-    // Liên kết với Category (FK CATE_ID)
+    // Liên kết khóa ngoại
         public function category()
     {
         return $this->belongsTo(
             Category::class,
-            'CATE_ID', // FK trong product_info
-            'ID'       // PK trong category
+            'CATE_ID', 
+            'ID'       
         );
     }
 
