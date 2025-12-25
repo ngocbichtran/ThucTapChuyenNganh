@@ -1,58 +1,75 @@
 @extends('layout/home')
-@section('body')
- <div style="margin-bottom: 15px; margin-left: 5%; width: 100%; display: flex; justify-content: flex-start;">
-         <a href="{{ route('product.create') }}"
-                class="btn btn-success btn-app btn-xs"
-                style="min-width: 60px; margin-top:80px; margin-left:280px;">
-                    <i class="fa fa-plus"></i><br>
-                    Add
-                </a>
-    </div>
-    <div class="container" style="margin-right:0px; margin-left:200px;">
-        <div class=" text-center rounded p-4">
 
-            <div class="table-responsive" style="display: flex; justify-content: center; margin-top:50px;">
-                <table class="table table-bordered table-hover text-center align-middle mb-0" style="width: 100%; margin: 0;
-                margin-left: 5%; table-layout: fixed;border-collapse: collapse;border-color:black;">
-                    <thead style="text-align: center;">
-                    <tr class="text-white">
-                        <th scope="col" style="width: 5%; word-break: break-word;">STT</th>
-                        <th scope="col" style="width: 6%; word-break: break-word;">IdXuat</th>
-                        <th scope="col" style="width: 6%; word-break: break-word;">Số Lượng</th>
-                        <th scope="col" style="width: 10%; word-break: break-word;">Giá</th>
-                        <th scope="col" style="width: 12%; word-break: break-word;">Tên sản phẩm</th>
-                        <th scope="col" style="width: 30%;">Thoi gian</th>
-                        <th scope="col" style="width: 15%; word-break: break-word;">Chỉnh sửa</th>
-                    </tr>
-                    </thead>
-                    <tbody style="word-break: break-all;">
+@section('title', 'Danh sách phiếu nhập kho')
+
+@section('body')
+<div class="container-fluid">
+
+    <!-- Page title -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">📦 Danh sách phiếu xuất kho</h4>
+        <a href="{{ route('admin.xuat.create') }}" class="btn btn-primary">
+            + Tạo phiếu xuất
+        </a>
+    </div>
+
+    <!-- Table -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
                     <tr>
-                        <td style="word-break: break-word;">1</td>
-                        <td style="word-break: break-word;">X01</td>
-                        <td style="word-break: break-word;">3</td>
-                        <td style="word-break: break-word;">50000</td>
-                        <td style="word-break: break-word;">DELL</td>
-                        <td style="word-break: break-word;">2025-11-01 19:25</td>
-                        <td style="display: flex; justify-content: center; align-items: center;">
-                            <a class="btn btn-sm btn-warning" href="" style="margin-left: 5px;">Edit</a>
-                            <a class="btn btn-sm btn-danger" href="" style="margin-left: 5px;">Delete</a>
-                        </td>
+                        <th>#</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày nhập</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th width="180">Thao tác</th>
                     </tr>
-                    <tr>
-                        <td style="word-break: break-word;">2</td>
-                        <td style="word-break: break-word;">X02</td>
-                        <td style="word-break: break-word;">1</td>
-                        <td style="word-break: break-word;">25000</td>
-                        <td style="word-break: break-word;">Iphone 16</td>
-                        <td style="word-break: break-word;">2025-11-01 19:25</td>
-                        <td style="display: flex; justify-content: center; align-items: center;">
-                            <a class="btn btn-sm btn-warning" href="" style="margin-left: 5px;">Edit</a>
-                            <a class="btn btn-sm btn-danger" href="" style="margin-left: 5px;">Delete</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                </thead>
+                <tbody>
+                    @forelse($receipts as $index => $receipt)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+
+                            <td>{{ $receipt->approved_by }}</td>
+
+                            <td>
+                                {{ $receipt->created_at->format('d/m/Y H:i') }}
+                            </td>
+
+                            <td>
+                                {{$receipt->totals }} đ
+                            </td>
+
+                            <td>
+                                @if($receipt->status == 'pending')
+                                    <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                @elseif($receipt->status == 'completed')
+                                    <span class="badge bg-success">Đã duyệt</span>
+                                @else
+                                    <span class="badge bg-secondary">Hủy</span>
+                                @endif
+                            </td>
+
+                            <td>
+                               <a href="{{ route('admin.xuat.show', $receipt->id) }}"
+                                class="btn btn-sm btn-info">
+                                    Chi tiết
+                               </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                Chưa có phiếu xuất nào
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
+
+</div>
 @endsection

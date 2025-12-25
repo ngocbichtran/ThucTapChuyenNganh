@@ -4,7 +4,8 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Models\Inventory;
+use Illuminate\Support\Facades\DB;
 class TonKhoController extends Controller
 {
     /**
@@ -12,7 +13,19 @@ class TonKhoController extends Controller
      */
     public function index()
     {
-       return view('admin.storage.trongkho-list');
+        $products = DB::table('inventories')
+        ->join('product_info', 'inventories.product_id', '=', 'product_info.ID')
+        ->select(
+            'product_info.ID',
+            'product_info.NAME',
+            'product_info.PRICE',
+            'inventories.quantity as STOCK'
+        )
+        ->orderBy('product_info.NAME')
+        ->get();
+
+    return view('admin.storage.trongkho-list', compact('products'));
+       
     }
 
     /**

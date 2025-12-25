@@ -25,6 +25,13 @@
         <a href="{{ route('admin.nhap.index') }}" class="btn btn-sm btn-outline-success">
             Nhập kho
         </a>
+       
+         <a href="{{ route('admin.xuat.index') }}" class="btn btn-sm btn-outline-success">
+            Xuất kho
+        </a>
+            <a href="{{ route('admin.tonkho.index') }}" class="btn btn-sm btn-outline-success">
+            Tồn kho
+        </a>
 
         <div class="dropdown">
             <a class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown">

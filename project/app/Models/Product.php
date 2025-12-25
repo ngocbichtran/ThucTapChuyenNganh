@@ -46,5 +46,20 @@ class Product extends Model
             'ID'
         );
     }
-
+    public function inventory()
+    {
+        return $this->hasOne(
+            Inventory::class,
+            'product_id',
+            'ID'
+        );
+    }
+    public function exportDetails()
+    {
+        return $this->hasMany(
+            ExportReceiptDetail::class,
+            'product_id',
+            'ID'
+        );
+    }
 }

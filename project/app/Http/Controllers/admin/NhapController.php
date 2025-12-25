@@ -10,6 +10,7 @@ use App\Models\Inventory;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class NhapController extends Controller
 {
@@ -48,7 +49,7 @@ class NhapController extends Controller
 
             // 1️⃣ Tạo phiếu nhập
             $receipt = ImportReceipt::create([
-                'receiptCode' => 'PN' . time(),
+                'receiptCode' => Str::upper(Str::random(8)),
                 'createdBy'   => Auth::id(),
                 'supplier'    => $request->supplier,
                 'note'        => $request->note,
