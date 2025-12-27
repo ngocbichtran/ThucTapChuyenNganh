@@ -40,7 +40,7 @@ class ProductController extends Controller
 
         // Phân trang
         $products = $query
-            ->paginate(4)
+            ->paginate(2)
             ->withQueryString();
 
         // Đếm

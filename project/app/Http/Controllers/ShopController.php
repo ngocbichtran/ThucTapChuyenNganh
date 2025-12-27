@@ -72,4 +72,9 @@ class ShopController extends Controller
 
         return view('shop', compact('product', 'related'));
     }
+
+     public function about()
+    {
+        return view('shop.product.shop-about');
+    }
 }

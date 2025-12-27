@@ -1,122 +1,132 @@
 @extends('layout/home')
 
 @section('body')
-<div class="row">
-    <div class="col-12">
 
-        {{-- Page header --}}
-        <div class="page-header mb-4">
-            <div class="page-block">
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <h5 class="mb-0">Quản lý người dùng</h5>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <a href="{{ route('admin.user.create') }}"
-                           class="btn btn-success">
-                            <i class="fa fa-plus me-1"></i> Thêm user
-                        </a>
-                    </div>
-                </div>
-            </div>
+<style>
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .badge-soft-admin {
+        background: rgba(220,53,69,.15);
+        color: #dc3545;
+    }
+
+    .badge-soft-user {
+        background: rgba(108,117,125,.15);
+        color: #6c757d;
+    }
+
+    .badge-soft-super {
+        background: #60bb54ff;
+        color: #000000ff;
+    }
+
+    .filter-btns .btn {
+        border-radius: 999px;
+        padding: 6px 16px;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h5 class="fw-bold mb-1">Quản lý người dùng</h5>
+            <ol class="breadcrumb mb-0 small">
+                <li class="breadcrumb-item">User</li>
+                <li class="breadcrumb-item active">Danh sách</li>
+            </ol>
         </div>
 
-        {{-- Tabs + Search --}}
-        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <a href="{{ route('admin.user.create') }}"
+           class="btn btn-primary rounded-pill px-4">
+            <i class="bi bi-plus-lg"></i> Thêm user
+        </a>
+    </div>
 
-            {{-- Tabs --}}
-            <ul class="nav nav-pills gap-2">
-                <li class="nav-item">
-                    <a class="nav-link {{ $status == 'all' ? 'active' : '' }}"
-                       href="{{ route('admin.user.index', ['status' => 'all']) }}">
-                        Tất cả ({{ $count['all'] }})
-                    </a>
-                </li>
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
 
-                <li class="nav-item">
-                    <a class="nav-link {{ $status == 'admin' ? 'active' : '' }}"
-                       href="{{ route('admin.user.index', ['status' => 'admin']) }}">
-                        Admin ({{ $count['admin'] }})
-                    </a>
-                </li>
+            <div class="filter-btns btn-group">
+                <a href="{{ route('admin.user.index',['status'=>'all']) }}"
+                   class="btn btn-outline-primary {{ $status=='all'?'active':'' }}">
+                    Tất cả ({{ $count['all'] }})
+                </a>
 
-                <li class="nav-item">
-                    <a class="nav-link {{ $status == 'user' ? 'active' : '' }}"
-                       href="{{ route('admin.user.index', ['status' => 'user']) }}">
-                        User ({{ $count['user'] }})
-                    </a>
-                </li>
+                <a href="{{ route('admin.user.index',['status'=>'admin']) }}"
+                   class="btn btn-outline-danger {{ $status=='admin'?'active':'' }}">
+                    Admin ({{ $count['admin'] }})
+                </a>
 
-                <li class="nav-item">
-                    <a class="nav-link {{ $status == 'trash' ? 'active' : '' }}"
-                       href="{{ route('admin.user.index', ['status' => 'trash']) }}">
-                        Vô hiệu hóa ({{ $count['trash'] }})
-                    </a>
-                </li>
-            </ul>
+                <a href="{{ route('admin.user.index',['status'=>'user']) }}"
+                   class="btn btn-outline-secondary {{ $status=='user'?'active':'' }}">
+                    User ({{ $count['user'] }})
+                </a>
 
-            {{-- Search --}}
-            <form method="GET"
-                  action="{{ route('admin.user.index') }}"
-                  class="d-flex">
+                <a href="{{ route('admin.user.index',['status'=>'trash']) }}"
+                   class="btn btn-outline-warning {{ $status=='trash'?'active':'' }}">
+                    Vô hiệu ({{ $count['trash'] }})
+                </a>
+            </div>
+
+            <form method="GET" action="{{ route('admin.user.index') }}" class="d-flex">
+                <input type="hidden" name="status" value="{{ $status }}">
                 <input type="text"
                        name="keyword"
                        value="{{ $keyword ?? '' }}"
-                       class="form-control"
+                       class="form-control rounded-pill"
                        placeholder="Tìm user..."
-                       style="width:220px">
-                <button class="btn btn-primary ms-2">Tìm</button>
+                       style="width:240px">
+                <button class="btn btn-primary rounded-pill ms-2 px-4">
+                    Tìm
+                </button>
             </form>
+
         </div>
+    </div>
 
-        {{-- Alert --}}
-        @if (session('success'))
-            <div class="alert alert-success py-2">
-                {{ session('success') }}
+    @foreach(['success','error'] as $msg)
+        @if(session($msg))
+            <div class="alert alert-{{ $msg=='success'?'success':'danger' }} rounded-3">
+                {{ session($msg) }}
             </div>
         @endif
+    @endforeach
 
-        @if (session('error'))
-            <div class="alert alert-danger py-2">
-                {{ session('error') }}
-            </div>
-        @endif
+    @if($keyword && $users->total()==0)
+        <div class="alert alert-warning rounded-3">
+            Không tìm thấy kết quả cho: <strong>{{ $keyword }}</strong>
+        </div>
+    @endif
 
-        @if($keyword && $users->total() == 0)
-            <div class="alert alert-warning py-2">
-                Không tìm thấy kết quả cho: <strong>{{ $keyword }}</strong>
-            </div>
-        @endif
-
-        {{-- Card table --}}
-        <div class="card">
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle text-center mb-0">
+                <table class="table table-hover align-middle mb-0 text-center">
                     <thead class="table-light">
                         <tr>
-                            <th>ID</th>
                             <th>Tên đăng nhập</th>
-                            <th>Email</th>
-                            <th>Quyền</th>
-                            <th>Ngày tạo</th>
-                            <th width="180">Hành động</th>
+                            <th class="text-start">Email</th>
+                            <th width="15%">Quyền</th>
+                            <th width="15%">Ngày tạo</th>
+                            <th width="20%">Hành động</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         @forelse ($users as $user)
                         <tr>
-                            <td>{{ $user->ID }}</td>
-                            <td>{{ $user->USER_NAME }}</td>
+                            <td class="fw-semibold">{{ $user->USER_NAME }}</td>
                             <td class="text-start">{{ $user->EMAIL }}</td>
 
                             <td>
-                                @if($user->role === 'admin')
-                                    <span class="badge bg-danger">Admin</span>
-                                @elseif($user->role === 'superadmin')
-                                    <span class="badge bg-secondary">Superadmin</span>
+                                @if($user->role==='superadmin')
+                                    <span class="badge badge-soft-super">Super</span>
+                                @elseif($user->role==='admin')
+                                    <span class="badge badge-soft-admin">Admin</span>
                                 @else
-                                    <span class="badge bg-secondary">User</span>
+                                    <span class="badge badge-soft-user">User</span>
                                 @endif
                             </td>
 
@@ -127,41 +137,38 @@
                             </td>
 
                             <td>
-                                <div class="d-flex justify-content-center gap-1">
+                                @if($status!='trash')
+                                    <a href="{{ route('admin.user.edit',$user->ID) }}"
+                                       class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1">
+                                        Sửa
+                                    </a>
 
-                                    @if ($status !== 'trash')
-                                        <a href="{{ route('admin.user.edit', $user->ID) }}"
-                                           class="btn btn-sm btn-outline-primary">
-                                            Sửa
-                                        </a>
-
-                                       @if($user->role !== 'superadmin'
-                                        && !(auth()->user()->role === 'admin' && $user->role === 'admin')
-                                        && auth()->id() != $user->ID
+                                    @if(
+                                        $user->role!=='superadmin'
+                                        && !(auth()->user()->role==='admin' && $user->role==='admin')
+                                        && auth()->id()!=$user->ID
                                     )
-                                        <form action="{{ route('admin.user.destroy', $user->ID) }}"
-                                            method="POST"
-                                            onsubmit="return confirm('Vô hiệu hóa user này?')">
+                                        <form action="{{ route('admin.user.destroy',$user->ID) }}"
+                                              method="POST"
+                                              class="d-inline"
+                                              onsubmit="return confirm('Vô hiệu hóa user này?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-warning btn-sm">
-                                                Vô hiệu hóa
+                                            <button class="btn btn-sm btn-outline-warning rounded-pill px-3">
+                                                Vô hiệu
                                             </button>
                                         </form>
                                     @endif
-
-                                    @else
-                                        <form action="{{ route('admin.user.restore', $user->ID) }}"
-                                              method="POST"
-                                              onsubmit="return confirm('Khôi phục user này?')">
-                                            @csrf
-                                            <button class="btn btn-success btn-sm">
-                                                Khôi phục
-                                            </button>
-                                        </form>
-                                    @endif
-
-                                </div>
+                                @else
+                                    <form action="{{ route('admin.user.restore',$user->ID) }}"
+                                          method="POST"
+                                          class="d-inline">
+                                        @csrf
+                                        <button class="btn btn-sm btn-outline-success rounded-pill px-3">
+                                            Khôi phục
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                         @empty
@@ -176,12 +183,11 @@
                 </table>
             </div>
         </div>
-
-        {{-- Pagination --}}
-        <div class="d-flex justify-content-center mt-3">
-            {{ $users->links('pagination::bootstrap-5') }}
-        </div>
-
     </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        {{ $users->links('pagination::bootstrap-5') }}
+    </div>
+
 </div>
 @endsection

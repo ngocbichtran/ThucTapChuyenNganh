@@ -9,7 +9,14 @@ use App\Models\Product;
 
 class AdminController extends Controller
 {
-    public function dashboard() {
-        return view('admin.dashboard');
-    }
+public function dashboard()
+{
+    return view('admin.dashboard', [
+        'totalCategories' => Category::count(),
+        'totalProducts'   => Product::count(),
+        'totalUsers'      => User::count(),
+    ]);
+}
+
+
 }

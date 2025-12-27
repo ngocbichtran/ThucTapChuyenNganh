@@ -1,8 +1,7 @@
 @extends('layout/shop')
 @section('body')
 
-<!-- ================= HERO ================= -->
-<!-- <section class="py-5 bg-white">
+<section class="py-5 bg-white">
     <div class="container-xl">
         <div class="card bg-hero border-0 rounded-5 overflow-hidden position-relative shadow-sm">
 
@@ -15,9 +14,8 @@
 
         </div>
     </div>
-</section> -->
+</section>
 
-<!-- ================= PRODUCTS ================= -->
 <section class="py-5 bg-white">
     <div class="container">
 

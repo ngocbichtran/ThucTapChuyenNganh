@@ -18,7 +18,7 @@ use App\Http\Controllers\Auth\GoogleController;
 /* PUBLIC*/
 // Trang shop (ai cũng xem được)
 Route::get('/', [ShopController::class, 'index'])->name('shop');
-
+Route::get('/shop/about', [ShopController::class, 'about'])->name('shop.about');
 // Auth mặc định Laravel
 Auth::routes();
 

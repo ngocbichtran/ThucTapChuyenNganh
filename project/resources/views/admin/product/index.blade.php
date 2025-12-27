@@ -8,7 +8,6 @@
 
     .truncate {
         max-width: 260px;
-        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
@@ -42,7 +41,19 @@
             <li class="breadcrumb-item active">Danh sách</li>
         </ol>
     </div>
+    @if($keyword && $products->total()==0)
+        <div class="alert alert-warning rounded-3">
+            Không tìm thấy kết quả cho: <strong>{{ $keyword }}</strong>
+        </div>
+    @endif
 
+    @foreach(['success','error'] as $msg)
+        @if(session($msg))
+            <div class="alert alert-{{ $msg=='success'?'success':'danger' }} rounded-3">
+                {{ session($msg) }}
+            </div>
+        @endif
+    @endforeach
     <a href="{{ route('admin.product.create') }}"
        class="btn btn-primary rounded-pill px-4">
         <i class="bi bi-plus-lg"></i> Thêm sản phẩm
@@ -90,19 +101,7 @@
     </div>
 </div>
 
-@if($keyword && $products->total()==0)
-    <div class="alert alert-warning rounded-3">
-        Không tìm thấy kết quả cho: <strong>{{ $keyword }}</strong>
-    </div>
-@endif
 
-@foreach(['success','error'] as $msg)
-    @if(session($msg))
-        <div class="alert alert-{{ $msg=='success'?'success':'danger' }} rounded-3">
-            {{ session($msg) }}
-        </div>
-    @endif
-@endforeach
 
 <div class="card border-0 shadow-sm rounded-4">
     <div class="card-body p-0">
@@ -110,14 +109,14 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light text-center">
                     <tr>
-                        <th width="5%">#</th>
-                        <th width="18%">Tên sản phẩm</th>
-                        <th class="text-start">Mô tả</th>
-                        <th width="10%">Giá</th>
-                        <th width="10%">Ảnh</th>
-                        <th width="12%">Trạng thái</th>
-                        <th width="12%">Ngày tạo</th>
-                        <th width="18%">Hành động</th>
+                        <th width="4%">STT</th>
+                        <th width="20%">Tên sản phẩm</th>
+                        <th width="25%">Mô tả</th>
+                        <th width="12%">Giá</th>
+                        <th width="7%">Ảnh</th>
+                        <th width="9%">Trạng thái</th>
+                        <th width="8%">Ngày tạo</th>
+                        <th width="15%">Hành động</th>
                     </tr>
                 </thead>
 

@@ -3,53 +3,110 @@
 @section('title','Dashboard')
 
 @section('body')
+<style>
+    .stat-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 10px 25px rgba(0,0,0,.05);
+        transition: all .25s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0,0,0,.08);
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .stat-card h3 {
+        font-size: 34px;
+        margin-top: 12px;
+    }
+
+    .stat-card a {
+        font-weight: 500;
+    }
+
+    .stat-card::after {
+        content: '';
+        position: absolute;
+        right: -40px;
+        bottom: -40px;
+        width: 120px;
+        height: 120px;
+        background: rgba(0,0,0,.03);
+        border-radius: 50%;
+    }
+</style>
 
 <div class="mb-4 d-flex justify-content-between align-items-center">
-    <h5 class="fw-bold mb-0">📊 Tổng quan kho</h5>
-    <small class="text-muted">Hôm nay</small>
+    <div>
+        <h5 class="fw-bold mb-1">Tổng quan kho</h5>
+        <small class="text-muted">Thống kê hệ thống</small>
+    </div>
+    <span class="badge bg-light text-muted px-3 py-2 rounded-pill">
+        {{ now()->format('d/m/Y') }}
+    </span>
 </div>
 
 <div class="row g-4">
 
-    <!-- Tổng danh mục -->
-    <div class="col-md-6 col-xl-3">
+    <!-- Danh mục -->
+    <div class="col-md-6 col-xl-4">
         <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="text-muted fw-medium">Tổng danh mục</span>
-                <div class="stat-icon bg-primary bg-opacity-10 text-primary">
-                    <i class="bi bi-tags"></i>
-                </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="text-muted fw-medium">Danh mục</span>
             </div>
-            <h3 class="fw-bold mb-1">{{ $countCategory ?? 0 }}</h3>
-            <small class="text-muted">Đang quản lý</small>
+
+            <h3 class="fw-bold">{{ $totalCategories }}</h3>
+
+            <a href="{{ route('admin.category.index') }}"
+               class="text-primary text-decoration-none">
+                Xem chi tiết →
+            </a>
         </div>
     </div>
 
-    <!-- Tổng sản phẩm -->
-    <div class="col-md-6 col-xl-3">
+    <!-- Sản phẩm -->
+    <div class="col-md-6 col-xl-4">
         <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="text-muted fw-medium">Tổng sản phẩm</span>
-                <div class="stat-icon bg-success bg-opacity-10 text-success">
-                    <i class="bi bi-phone"></i>
-                </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="text-muted fw-medium">Sản phẩm</span>
             </div>
-            <h3 class="fw-bold mb-1">{{ $countProduct ?? 0 }}</h3>
-            <small class="text-muted">Trong kho</small>
+
+            <h3 class="fw-bold">{{ $totalProducts }}</h3>
+
+            <a href="{{ route('admin.product.index') }}"
+               class="text-success text-decoration-none">
+                Quản lý →
+            </a>
         </div>
     </div>
 
-    <!-- Tổng người dùng -->
-    <div class="col-md-6 col-xl-3">
+    <!-- Người dùng -->
+    <div class="col-md-6 col-xl-4">
         <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="d-flex justify-content-between align-items-center">
                 <span class="text-muted fw-medium">Người dùng</span>
-                <div class="stat-icon bg-warning bg-opacity-10 text-warning">
-                    <i class="bi bi-people"></i>
-                </div>
             </div>
-            <h3 class="fw-bold mb-1">{{ $countUser ?? 0 }}</h3>
-            <small class="text-muted">Hệ thống</small>
+
+            <h3 class="fw-bold">{{ $totalUsers }}</h3>
+
+            <a href="{{ route('admin.user.index') }}"
+               class="text-warning text-decoration-none">
+                Danh sách →
+            </a>
         </div>
     </div>
 

@@ -30,7 +30,7 @@ class CategoryController extends Controller
         // Phân trang
         $categories = $query
             ->orderBy('ID', 'DESC')
-            ->paginate(5)
+            ->paginate(4)
             ->withQueryString();
 
         // Đếm trạng thái

@@ -106,13 +106,12 @@
 
         <div class="collapse navbar-collapse" id="menu">
             <ul class="navbar-nav mx-auto gap-3 fw-semibold">
-                <li class="nav-item"><a class="nav-link text-primary" href="#">Trang chủ</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Về Chúng Tôi</a></li>
+                <li class="nav-item"><a class="nav-link text-primary" href="{{ route('shop') }}">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('shop.about') }}">Về Chúng Tôi</a></li>
             </ul>
 
 <div class="d-flex align-items-center gap-3">
 
-    {{-- CHƯA ĐĂNG NHẬP --}}
     @guest
         <a href="{{ route('login') }}"
            class="btn btn-sm btn-outline-primary rounded-pill fw-semibold d-flex align-items-center gap-1">
@@ -124,7 +123,6 @@
     @endguest
 
 
-    {{-- ĐÃ ĐĂNG NHẬP --}}
     @auth
         <!-- USER NAME -->
         <span class="badge bg-light text-dark fw-semibold px-3 py-2 rounded-pill">
