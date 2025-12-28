@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\NhapController;
 use App\Http\Controllers\Admin\TonKhoController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Auth\GoogleController;
-
+use App\Http\Controllers\SettingController;
 /* PUBLIC*/
 // Trang shop (ai cũng xem được)
 Route::get('/', [ShopController::class, 'index'])->name('shop');
@@ -31,7 +31,6 @@ Route::prefix('admin')
         // Trang chính admin
         Route::get('/dashboard', [AdminController::class, 'dashboard'])
             ->name('dashboard');
-
         Route::get('/storage/lichsukho', [AdminController::class, 'storagelichsukho'])
             ->name('storage-lichsukho');
 
@@ -67,3 +66,12 @@ Route::get('/about', [AboutController::class, 'index'])->name('shop.about');
 // Admin
 Route::get('/admin/about', [AboutController::class, 'edit'])->name('admin.about.edit');
 Route::post('/admin/about', [AboutController::class, 'update'])->name('admin.about.update');
+
+
+
+//Bổ sung cài đặt chỉnh sửa logo, tên admin
+Route::get('/setting', [SettingController::class, 'index'])
+     ->name('setting');
+
+Route::post('/setting', [SettingController::class, 'update'])
+     ->name('setting.update');

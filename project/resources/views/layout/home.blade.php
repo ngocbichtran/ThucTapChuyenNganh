@@ -191,14 +191,12 @@
 <div class="d-flex">
 
     <aside class="sidebar">
-        <div class="brand">
-            <div class="brand-icon">
-                <img src="{{asset('assetShop\images\icons\CabyShopTrang.png')}}" alt="" width="45">
-            </div>
-            <div>
-                <strong>CapyKho</strong><br>
-                <small class="text-muted">Quản lý kho</small>
-            </div>
+        <div class="brand text-white d-flex align-items-center gap-2">
+            @if(!empty($setting?->logo_admin))
+                <img src="{{ asset('storage/'.$setting->logo_admin) }}"
+                    style="height:40px">
+            @endif
+            {{ $setting->name_admin ?? 'Admin' }}
         </div>
 
         <div class="mt-4">
@@ -206,6 +204,12 @@
                class="menu-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-speedometer2"></i> Tổng quan
             </a>
+
+            <a href="{{ route('setting') }}"
+                class="menu-link {{ request()->routeIs('setting*') ? 'active' : '' }}">
+                <i class="bi bi-gear"></i> Cài đặt
+            </a>
+
 
             <a href="{{ route('admin.category.index') }}"
                class="menu-link {{ request()->routeIs('admin.category.*') ? 'active' : '' }}">
