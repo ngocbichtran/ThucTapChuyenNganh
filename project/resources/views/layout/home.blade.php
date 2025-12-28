@@ -217,6 +217,11 @@
                 <i class="bi bi-phone"></i> Sản phẩm
             </a>
 
+            <a href="{{ route('admin.about.edit') }}"
+               class="menu-link {{ request()->routeIs('admin.about.*') ? 'active' : '' }}">
+                <i class="bi bi-phone"></i> About Us
+            </a>
+
             <hr>
 
             <a href="{{ route('admin.nhap.index') }}" class="menu-link">

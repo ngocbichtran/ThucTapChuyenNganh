@@ -108,19 +108,21 @@ class CategoryController extends Controller
     //DELETE (SOFT)
     public function destroy(string $id)
     {
-        try {
-            $category = Category::findOrFail($id);
-            $category->delete();
+        $category = Category::findOrFail($id);
 
-            return redirect()
-                ->route('admin.category.index')
-                ->with('success', 'Đã chuyển category vào thùng rác!');
-        } catch (\Illuminate\Database\QueryException $e) {
+        if ($category->products()->exists()) {
             return redirect()
                 ->route('admin.category.index')
                 ->with('error', 'Không thể xoá vì category đang được sử dụng!');
         }
+
+        $category->delete();
+
+        return redirect()
+            ->route('admin.category.index')
+            ->with('success', 'Đã chuyển category vào thùng rác!');
     }
+
 
     //RESTORE
     public function restore(string $id)

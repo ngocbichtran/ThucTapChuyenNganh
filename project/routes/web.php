@@ -12,13 +12,13 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\XuatController;
 use App\Http\Controllers\Admin\NhapController;
 use App\Http\Controllers\Admin\TonKhoController;
-
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Auth\GoogleController;
 
 /* PUBLIC*/
 // Trang shop (ai cũng xem được)
 Route::get('/', [ShopController::class, 'index'])->name('shop');
-Route::get('/shop/about', [ShopController::class, 'about'])->name('shop.about');
+
 // Auth mặc định Laravel
 Auth::routes();
 
@@ -58,3 +58,12 @@ Route::get('/auth/google', [GoogleController::class, 'redirect'])
     ->name('google.login');
 
 Route::get('/auth/google/callback', [GoogleController::class, 'callback']);
+
+
+//Bổ sung about us
+// User
+Route::get('/about', [AboutController::class, 'index'])->name('shop.about');
+
+// Admin
+Route::get('/admin/about', [AboutController::class, 'edit'])->name('admin.about.edit');
+Route::post('/admin/about', [AboutController::class, 'update'])->name('admin.about.update');

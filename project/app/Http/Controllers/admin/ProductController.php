@@ -102,34 +102,40 @@ class ProductController extends Controller
     }
 
     // UPDATE
-    public function update(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
+public function update(Request $request, $id)
+{
+    $about = About::findOrFail($id);
 
-        $request->validate([
-            'CATE_ID'     => 'required|integer|exists:category,ID',
-            'NAME'        => 'required|string|max:190',
-            'DESCRIPTION' => 'nullable|string',
-            'PRICE'       => 'required|numeric|min:0',
-            'IMG_URL'     => 'nullable|string|max:200',
-            'ACTIVE_FLAG' => 'required|integer|in:0,1',
-        ]);
+    $request->validate([
+        'tieuDe'           => 'required|string|max:255',
+        'moTa'             => 'required|string',
+        'gioiThieu'        => 'required|string',
+        'huongPhatTrien'   => 'required|string',
+        'hinhAnh'          => 'nullable|image|max:2048',
+    ]);
 
-        $product->update([
-            'CATE_ID'     => $request->CATE_ID,
-            'NAME'        => $request->NAME,
-            'DESCRIPTION' => $request->DESCRIPTION,
-            'PRICE'       => $request->PRICE,
-            'IMG_URL'     => $request->IMG_URL,
-            'ACTIVE_FLAG' => $request->ACTIVE_FLAG,
-            'UPDATE_DATE' => now(),
-        ]);
+    $data = [
+        'tieuDe'         => $request->tieuDe,
+        'moTa'           => $request->moTa,
+        'gioiThieu'      => $request->gioiThieu,
+        'huongPhatTrien' => $request->huongPhatTrien,
+    ];
 
-        return redirect()
-            ->route('admin.product.index')
-            ->with('success', 'Cập nhật sản phẩm thành công!');
+    // Upload ảnh
+    if ($request->hasFile('hinhAnh')) {
+        if ($about->hinhAnh && Storage::disk('public')->exists($about->hinhAnh)) {
+            Storage::disk('public')->delete($about->hinhAnh);
+        }
+
+        $data['hinhAnh'] = $request->file('hinhAnh')->store('about', 'public');
     }
 
+    $about->update($data);
+
+    return redirect()
+        ->route('admin.about.edit', $about->id)
+        ->with('success', 'Cập nhật trang About thành công!');
+}
     // SOFT DELETE
     public function destroy($id)
     {

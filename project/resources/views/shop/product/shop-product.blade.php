@@ -3,7 +3,6 @@
 @section('body')
 <div class="container" style="margin-top: 70px;">
 
-    {{-- Bộ lọc sản phẩm --}}
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
         <div class="flex-w flex-l-m m-tb-10">
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
